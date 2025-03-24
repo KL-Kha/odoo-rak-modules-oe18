@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="x_order_qty_done_limit_form" model="ir.ui.view">
+        <field name="name">x_order_qty_done_limit.form</field>
+        <field name="model">x_order_qty_done_limit</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="x_name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="x_picking_type_id"/>
+                            <field name="x_overcharge_ratio"/>
+                            
+                        </group>
+                        <group>
+                            <field name="x_is_active"/>
+                        </group>
+                    </group>
+                    <!-- <notebook>
+                        <page string="Notes">
+                            <div>
+                                <field name="x_notes" />
+                            </div>
+                        </page>
+                    </notebook> -->
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" options="{'post_refresh': 'recipients'}" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="x_order_qty_done_limit_list" model="ir.ui.view">
+        <field name="name">x_order_qty_done_limit.list</field>
+        <field name="model">x_order_qty_done_limit</field>
+        <field name="arch" type="xml">
+            <list string="Picking Quantity Done Limit list" editable="bottom">  
+                <field name="x_picking_type_id" options="{&quot;no_create&quot;:true}" can_create="True" can_write="True"/>
+                <field name="x_overcharge_ratio"/>
+                <field name="x_is_active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="x_order_qty_done_limit_window" model="ir.actions.act_window">
+        <field name="name">Picking Quantity Done Limit</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">x_order_qty_done_limit</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Picking Quantity Done Limit
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="x_order_qty_done_limit_opt_menu"
+            name="MJB - Picking Quantity"
+            parent="stock.menu_stock_config_settings"
+            sequence="50"/>
+
+    <menuitem id="menu_custom_picking_qty_done_limit"
+            name="MJB - Done Limit"
+            parent="x_order_qty_done_limit_opt_menu"
+            action="x_order_qty_done_limit_window"
+            sequence="10"/>
+
+</odoo>

@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+
+        <record model="account.account.tag" id="mjb_data_account_tag_liquidity">
+          <field name="name">Bank and Cash</field>
+          <field name="x_code">bank_and_cash</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_receivable_plus">
+          <field name="name">Receivable</field>
+          <field name="x_code">receivable</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_receivable_minus">
+          <field name="name">Receivable Minus</field>
+          <field name="x_code">receivable_minus</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_notes_receivable">
+          <field name="name">Notes Receivable</field>
+          <field name="x_code">notes_receivable</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_interest_receivable">
+          <field name="name">Interest Receivable</field>
+          <field name="x_code">interest_receivable</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_prepayments">
+          <field name="name">Prepayments</field>
+          <field name="x_code">prepayments</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_dividend_receivable">
+          <field name="name">Dividend Receivable</field>
+          <field name="x_code">dividend_receivable</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_other_receivable">
+          <field name="name">Other Receivable</field>
+          <field name="x_code">other_receivable</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_trading_financial_assets">
+          <field name="name">Trading financial assets</field>
+          <field name="x_code">trading_financial_assets</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_inventory">
+          <field name="name">Inventory</field>
+          <field name="x_code">inventory</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_inventory_minus">
+          <field name="name">Inventory Minus</field>
+          <field name="x_code">inventory_minus</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_other_current_assets">
+          <field name="name">Other Current Assets</field>
+          <field name="x_code">other_current_assets</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_non_current_assets">
+          <field name="name">Non Current Assets</field>
+          <field name="x_code">non_current_assets</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_non_current_assets_one_year">
+          <field name="name">Non-Current Assets in one year</field>
+          <field name="x_code">non_current_assets_in_one_year</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_available_sale_financial_assets">
+          <field name="name">Available for sale financial assets</field>
+          <field name="x_code">available_for_sale_financial_assets</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_available_sale_financial_assets_minus">
+          <field name="name">Available for sale financial assets Minus</field>
+          <field name="x_code">available_for_sale_financial_assets_minus</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_held_maturity_investments">
+          <field name="name">Held to maturity investments</field>
+          <field name="x_code">held_to_maturity_investments</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_held_maturity_investments_minus">
+          <field name="name">Held to maturity investments Minus</field>
+          <field name="x_code">held_to_maturity_investments_minus</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_long_term_receivable">
+          <field name="name">Long-term Receivable</field>
+          <field name="x_code">long_term_receivable</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_long_term_receivable_minus">
+          <field name="name">Long-term Receivable Minus</field>
+          <field name="x_code">long_term_receivable_minus</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_long_term_equity_investments">
+          <field name="name">Long-term equity investments</field>
+          <field name="x_code">long_term_equity_investments</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_long_term_equity_investments_minus">
+          <field name="name">Long-term equity investments Minus</field>
+          <field name="x_code">long_term_equity_investments_minus</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_tangible_assets">
+          <field name="name">Tangible assets</field>
+          <field name="x_code">tangible_assets</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_tangible_assets_minus">
+          <field name="name">Tangible assets Minus</field>
+          <field name="x_code">tangible_assets_minus</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_construction_work_process">
+          <field name="name">Construction in work in process</field>
+          <field name="x_code">construction_in_work_in_process</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_construction_work_process_minus">
+          <field name="name">Construction in work in process Minus</field>
+          <field name="x_code">construction_in_work_in_process_minus</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_project_material">
+          <field name="name">Project material</field>
+          <field name="x_code">project_material</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_disposal_fix_assets">
+          <field name="name">Disposal of Fixed Assets</field>
+          <field name="x_code">disposal_of_fixed_assets</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_production_biological_assets">
+          <field name="name">Production of Biological Assets</field>
+          <field name="x_code">production_of_biological_assets</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_oil_gas_assets">
+          <field name="name">Oil and gas Assets</field>
+          <field name="x_code">oil_and_gas_assets</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_intangible_assets">
+          <field name="name">Intangible Assets</field>
+          <field name="x_code">intangible_assets</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_intangible_assets_minus">
+          <field name="name">Intangible Assets Minus</field>
+          <field name="x_code">intangible_assets_minus</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_development_expenditure">
+          <field name="name">Development expenditure</field>
+          <field name="x_code">development_expenditure</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_development_expenditure_minus">
+          <field name="name">Development expenditure Minus</field>
+          <field name="x_code">development_expenditure_minus</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_goodwill">
+          <field name="name">Good will</field>
+          <field name="x_code">good_will</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_deffered_assets">
+          <field name="name">Deffered Assets</field>
+          <field name="x_code">deffered_assets</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_deffered_income_tax_assets">
+          <field name="name">Deffered Income Tax Assets</field>
+          <field name="x_code">deffered_income_tax_assets</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_short_term_loan">
+          <field name="name">Short-term Loan</field>
+          <field name="x_code">short_term_loan</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_trading_financial_liabilities">
+          <field name="name">Trading financial liabilities</field>
+          <field name="x_code">trading_financial_liabilities</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_payable">
+          <field name="name">Payable</field>
+          <field name="x_code">payable</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_payable_minus">
+          <field name="name">Payable Minus</field>
+          <field name="x_code">payable_minus</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_notes_payable">
+          <field name="name">Notes payable</field>
+          <field name="x_code">notes_payable</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_customer_deposit">
+          <field name="name">Customer Deposit</field>
+          <field name="x_code">customer_deposit</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_staff_payable">
+          <field name="name">Staff Payable</field>
+          <field name="x_code">staff_payable</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_tax_payable">
+          <field name="name">Tax Payable</field>
+          <field name="x_code">tax_payable</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_interest_payable">
+          <field name="name">Interest Payable</field>
+          <field name="x_code">interest_payable</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_dividend_payable">
+          <field name="name">Dividend Payable</field>
+          <field name="x_code">dividend_payable</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_other_payable">
+          <field name="name">Other Payable</field>
+          <field name="x_code">other_payable</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_current_liabilities">
+          <field name="name">Current Liabilities</field>
+          <field name="x_code">current_liabilities</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_non_current_liabilities">
+          <field name="name">Non-Current Liabilities in one year</field>
+          <field name="x_code">non_current_liabilities_in_one_year</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_longterm_loan">
+          <field name="name">Long-term Loan</field>
+          <field name="x_code">long_term_loan</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_bonds_payable">
+          <field name="name">Bonds Payable</field>
+          <field name="x_code">bonds_payable</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_longterm_account_payable">
+          <field name="name">Long term Accounts Payable</field>
+          <field name="x_code">long_term_accounts_payable</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_longterm_account_payable_minus">
+          <field name="name">Long term Accounts Payable Minus</field>
+          <field name="x_code">long_term_accounts_payable_minus</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_special_accounts_payable">
+          <field name="name">Special Accounts Payable</field>
+          <field name="x_code">special_accounts_payable</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_accrued_liabilities">
+          <field name="name">Accrued liabilities</field>
+          <field name="x_code">accrued_liabilities</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_deffered_taxation_credit">
+          <field name="name">Deffered taxation credit</field>
+          <field name="x_code">deffered_taxation_credit</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_other_non_current_liabilities">
+          <field name="name">Other Non-Current Liabilities</field>
+          <field name="x_code">other_non_current_liabilities</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_share_capital">
+          <field name="name">Share Capital</field>
+          <field name="x_code">share_capital</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_capital_reserves">
+          <field name="name">Capital Reserves</field>
+          <field name="x_code">capital_reserves</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_less_treasury_stock">
+          <field name="name">Less: Treasury Stock</field>
+          <field name="x_code">less_treasury_stock</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_surplus_reserves">
+          <field name="name">Surplus Reserves</field>
+          <field name="x_code">surplus_reserves</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_undivided_profits">
+          <field name="name">Undivided Profits</field>
+          <field name="x_code">undivided_profits</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_operation_cost">
+          <field name="name">Operation Costs</field>
+          <field name="x_code">operation_costs</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_operation_tax_addons">
+          <field name="name">Operation Tax and add-ons</field>
+          <field name="x_code">operation_tax_and_add_ons</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_sales_expenses">
+          <field name="name">Sales Expenses</field>
+          <field name="x_code">sales_expenses</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_overhead_expenses">
+          <field name="name">Overhead Expenses</field>
+          <field name="x_code">overhead_expenses</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_financial_expenses">
+          <field name="name">Financial Expenses</field>
+          <field name="x_code">financial_expenses</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_devaluation_lost_assets">
+          <field name="name">Devaluation Lost of Assets</field>
+          <field name="x_code">devaluation_lost_of_assets</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_net_changes_in_fair_value">
+          <field name="name">Net changes in fair value(loss of "-")</field>
+          <field name="x_code">net_changes_in_fair_value</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_net_investment_income">
+          <field name="name">Net investment income(loss of "-")</field>
+          <field name="x_code">net_investment_income</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_prior_year_income_adjustment">
+          <field name="name">Prior year income adjustment</field>
+          <field name="x_code">prior_year_income_adjustment</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_revenue">
+          <field name="name">Income</field>
+          <field name="x_code">income</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_non_operation_income">
+          <field name="name">Non-operation income</field>
+          <field name="x_code">non_operation_income</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_non_operation_expenses">
+          <field name="name">Non-operation expenses</field>
+          <field name="x_code">non_operation_expenses</field>
+        </record>
+
+        <record model="account.account.tag" id="mjb_data_account_tag_profit_tax_expenses">
+          <field name="name">Profit tax expenses</field>
+          <field name="x_code">profit_tax_expenses</field>
+        </record>
+
+    </data>
+</odoo>
