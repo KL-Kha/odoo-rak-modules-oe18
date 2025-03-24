@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rak_je_split_sub_contracted_cost_mo_entry_action" model="ir.actions.server">
+        <field name="name">MJB - Action Split Sub-Contracted Cost MO Entry</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="state">code</field>
+        <field name='code'>
+if records:
+    records.action_split_subcontracted_cost_mo_entry()
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="rak_je_split_sub_contracted_cost_mo_entry_automation" model="base.automation">
+            <field name="name">MJB - Automation Split Sub-Contracted Cost MO Entry</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="trigger">on_write</field>
+            <field name="trigger_field_ids" eval="[(6, 0, [ref('account.field_account_move__state')])]"/>
+            <field name="filter_pre_domain">[("state","=","draft")]</field>
+            <field name="filter_domain">["&amp;",("state","=","posted"),("stock_move_id.production_id","!=",False)]</field>
+            <field name="action_server_ids" eval="[(4, ref('mjb_valuation_sub_split_service.rak_je_split_sub_contracted_cost_mo_entry_action'))]"/>
+        </record>
+    </data>
+</odoo>
