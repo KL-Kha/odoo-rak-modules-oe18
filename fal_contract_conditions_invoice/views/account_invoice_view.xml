@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_fwa_con_invoice_form" model="ir.ui.view">
+            <field name="name">fwa.con.account.invoice.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="narration" position="before">
+                        <field name="contract_condition_id"/>
+                        <field name="contract_condition_report_id" invisible="not contract_condition_id" options="{'no_create': True, 'no_edit': True}" domain="[('id', '=', False)]"/>
+                    </field>
+                </data>
+            </field>
+        </record>
+
+        <menuitem action="fal_contract_conditions.view_fwa_contract_condition_list_action" id="fal_menu_contract_condition_account"
+            parent="account.menu_finance_configuration"
+            sequence="1"/>
+    </data>
+</odoo>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_fwa_contract_condition_list" model="ir.ui.view">
+            <field name="name">fwa.contract.condition.list</field>
+            <field name="model">contract.condition</field>
+            <field name="arch" type="xml">
+                <list string="Terms &amp; Conditions">
+                    <field name="name" />
+                    <field name="content" />
+                </list>
+            </field>
+        </record>
+
+        <record id="view_fwa_contract_condition_form" model="ir.ui.view">
+            <field name="name">fwa.contract.condition.form</field>
+            <field name="model">contract.condition</field>
+            <field name="arch" type="xml">
+                <form string="Terms &amp; Conditions">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="content"/>
+                            </group>
+                            <group>
+                                <field name="report_ids" widget="many2many_tags" options="{'no_create': True, 'no_edit': True}"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_fwa_contract_condition_list_action" model="ir.actions.act_window">
+            <field name="name">Terms &amp; Conditions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">contract.condition</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a Terms &amp; Condition.
+              </p><p>
+                This configuration works like a template for your terms and conditions fields.
+              </p>
+            </field>
+        </record>
+
+        <menuitem name="Terms &amp; Conditions"
+            id="menu_tnc"
+            groups="fal_contract_conditions.group_terms_condition"
+            web_icon="fal_contract_conditions,static/description/icon.png"
+            sequence="40"/>
+        <menuitem action="view_fwa_contract_condition_list_action" id="menu_tnc_list"
+            parent="fal_contract_conditions.menu_tnc"
+            sequence="1" />
+    </data>
+</odoo>

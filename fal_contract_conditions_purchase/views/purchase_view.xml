@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_fwa_con_purchase_order_form" model="ir.ui.view">
+            <field name="name">fwa.con.purchase.order.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="notes" position="before">
+                        <field name="contract_condition_id"/>
+                        <field name="contract_condition_report_id" invisible="not contract_condition_id" options="{'no_create': True, 'no_edit': True}" domain="[('id', '=', False)]"/>
+                    </field>
+                </data>
+            </field>
+        </record>
+
+        <menuitem action="fal_contract_conditions.view_fwa_contract_condition_list_action" id="fal_menu_contract_condition_purchase"
+            parent="purchase.menu_purchase_config"
+            sequence="1" />
+    </data>
+</odoo>

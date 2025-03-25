@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_contract_condition_user,contract.condition.user,model_contract_condition,base.group_user,1,0,0,0
+access_contract_condition_manager,contract.condition.manager,model_contract_condition,fal_contract_conditions.group_terms_condition,1,1,1,1
