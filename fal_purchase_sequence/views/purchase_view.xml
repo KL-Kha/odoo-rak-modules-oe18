@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fal_purchase_quotation_number_form_view" model="ir.ui.view">
+        <field name="name">fal_purchase_quotation_number_form_view</field>
+        <field name="model">purchase.order</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="inside">
+                <h5 invisible="not quotation_number">
+                    <label for="quotation_number" string="Quotation Number"/>
+                    <field name="quotation_number"/>
+                </h5>
+            </xpath>
+        </field>
+    </record>
+</odoo>

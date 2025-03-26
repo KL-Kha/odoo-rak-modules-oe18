@@ -1,0 +1,73 @@
+<odoo>
+    <data>
+        <record id="purchase_order_tree_add_title" model="ir.ui.view">
+            <field name="name">purchase.order.list.add.title</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="fal_title"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="purchase_order_form_add_title" model="ir.ui.view">
+            <field name="name">purchase.order.form.add.title</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_title')]" position="inside">
+                    <label for="fal_title" string="Title" class="oe_edit_only"/>
+                    <h1>
+                        <field name="fal_title"/>
+                    </h1>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_purchase_order_filter_fal_purcp" model="ir.ui.view">
+            <field name="name">purchase.order.list.select.fal.falpurcp</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <field name="fal_title"/>
+                </xpath>
+            </field>
+        </record>
+
+         <!-- change report PDF name -->
+        <function name="write" model="ir.model.data">
+            <function name="search" model="ir.model.data">
+                <value eval="[('module', '=', 'purchase'), ('name', '=', 'email_template_edi_purchase')]"/>
+            </function>
+            <value eval="{'noupdate': False}"/>
+        </function>
+        <function name="write" model="ir.model.data">
+            <function name="search" model="ir.model.data">
+                <value eval="[('module', '=', 'purchase'), ('name', '=', 'email_template_edi_purchase_done')]"/>
+            </function>
+            <value eval="{'noupdate': False}"/>
+        </function>
+
+        <record id="purchase.email_template_edi_purchase" model="mail.template">
+            <field name="subject">{{object.company_id.name}} Order (Ref {{object.name or 'n/a' }}) {{object.fal_title and '- ' or ''}} {{object.fal_title or ''}}</field>
+        </record>
+
+        <record id="purchase.email_template_edi_purchase_done" model="mail.template">
+            <field name="subject">{{object.company_id.name}} Order (Ref {{object.name or 'n/a' }}) {{object.fal_title and '- ' or ''}}{{object.fal_title or ''}}</field>
+        </record>
+        <record id="purchase.action_report_purchase_order" model="ir.actions.report">
+            <field name="print_report_name">PO_{{(object.name or '').replace('/','_')}}{{object.fal_title and '_' or ''}}{{object.fal_title or ''}}</field>
+        </record>
+
+        <record id="purchase.action_report_purchase_order" model="ir.actions.report">
+            <field name="print_report_name">(object.fal_title and object.state in ('draft', 'sent') and 'Request for Quotation - %s - %s' % (object.name, object.fal_title) or (object.fal_title and 'Purchase Order - %s - %s' % (object.name, object.fal_title))) or (object.state in ('draft', 'sent') and 'Request for Quotation - %s' % (object.name) or 'Purchase Order - %s' % (object.name))</field>
+        </record>
+
+        <record id="purchase.report_purchase_quotation" model="ir.actions.report">
+            <field name="print_report_name">(object.fal_title and 'Request for Quotation - %s - %s' % (object.name, object.fal_title) or 'Request for Quotation - %s' % (object.name))</field>
+        </record>
+
+    </data>
+</odoo>
