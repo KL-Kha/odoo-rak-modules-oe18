@@ -1,0 +1,18 @@
+<odoo>
+    <template id="report_delivery_document_falhscode2" inherit_id="stock_delivery.report_delivery_document2">
+        <xpath expr="//t[@t-set='has_hs_code']" position="attributes">
+            <attribute name="t-value">o.move_lines.filtered(lambda l: l.fal_hscode)</attribute>
+        </xpath>
+    </template>
+
+    <!-- this have duplicate replace need to fix -->
+    <template id="stock_report_delivery_has_serial_move_line_inherit_delivery_new" inherit_id="stock_delivery.stock_report_delivery_has_serial_move_line_inherit_delivery">
+        <xpath expr="//td[@t-if='has_hs_code']" position="replace">
+        </xpath>
+    </template>
+    <template id="stock_report_delivery_aggregated_move_lines_inherit_delivery_tes_tes" inherit_id="stock.stock_report_delivery_aggregated_move_lines">
+        <xpath expr="//td[@name='move_line_aggregated_qty_ordered']" position="after">
+            <td t-if="has_hs_code"><span t-esc="aggregated_lines[line]['fal_hscode']"/></td>
+        </xpath>
+    </template>
+</odoo>

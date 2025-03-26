@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_category_list_inherit_hscode_ext" model="ir.ui.view">
+            <field name="name">product_category_list_inherit_hscode_ext</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_list_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="display_name" position="after">
+                        <field name="fal_hscode_cat"/>
+                    </field>
+                </data>
+            </field>
+        </record>
+
+        <record id="product_category_form_inherit_hscode_ext" model="ir.ui.view">
+            <field name="name">product_category_form_inherit_hscode_ext</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="parent_id" position="after">
+                        <field name="fal_hscode_cat"/>
+                    </field>
+                </data>
+            </field>
+        </record>
+    </data>
+</odoo>
