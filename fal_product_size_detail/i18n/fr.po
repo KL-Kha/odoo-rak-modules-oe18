@@ -1,0 +1,75 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* fal_product_size_detail
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-11-25 14:26+0000\n"
+"PO-Revision-Date: 2019-11-25 15:29+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: fr\n"
+"X-Generator: Poedit 2.2.3\n"
+
+#. module: fal_product_size_detail
+#: model:ir.model.fields,field_description:fal_product_size_detail.field_product_product__fal_height
+#: model:ir.model.fields,field_description:fal_product_size_detail.field_product_template__fal_height
+msgid "Height"
+msgstr "Hauteur"
+
+#. module: fal_product_size_detail
+#: model:ir.model.fields,field_description:fal_product_size_detail.field_product_product__fal_height_uom_id
+#: model:ir.model.fields,field_description:fal_product_size_detail.field_product_template__fal_height_uom_id
+msgid "Height UoM"
+msgstr "Hauteur UdM"
+
+#. module: fal_product_size_detail
+#: model:ir.model.fields,field_description:fal_product_size_detail.field_product_product__fal_length
+#: model:ir.model.fields,field_description:fal_product_size_detail.field_product_template__fal_length
+msgid "Length"
+msgstr "Longueur"
+
+#. module: fal_product_size_detail
+#: model:ir.model.fields,field_description:fal_product_size_detail.field_product_product__fal_length_uom_id
+#: model:ir.model.fields,field_description:fal_product_size_detail.field_product_template__fal_length_uom_id
+msgid "Length UoM"
+msgstr "Longueur UdM"
+
+#. module: fal_product_size_detail
+#: model:ir.model,name:fal_product_size_detail.model_product_product
+msgid "Product"
+msgstr "Article"
+
+#. module: fal_product_size_detail
+#: model:ir.model,name:fal_product_size_detail.model_product_template
+msgid "Product Template"
+msgstr "Modèle d'article"
+
+#. module: fal_product_size_detail
+#: model:ir.model.fields,field_description:fal_product_size_detail.field_product_product__volume
+#: model:ir.model.fields,field_description:fal_product_size_detail.field_product_template__volume
+msgid "Volume"
+msgstr "Volume"
+
+#. module: fal_product_size_detail
+#: model:ir.model.fields,field_description:fal_product_size_detail.field_product_product__fal_width
+#: model:ir.model.fields,field_description:fal_product_size_detail.field_product_template__fal_width
+msgid "Width"
+msgstr "Largeur"
+
+#. module: fal_product_size_detail
+#: model:ir.model.fields,field_description:fal_product_size_detail.field_product_product__fal_width_uom_id
+#: model:ir.model.fields,field_description:fal_product_size_detail.field_product_template__fal_width_uom_id
+msgid "Width UoM"
+msgstr "Largeur UdM"
+
+#. module: fal_product_size_detail
+#: model:uom.uom,name:fal_product_size_detail.fal_uom_milimeter
+msgid "mm"
+msgstr "mm"
