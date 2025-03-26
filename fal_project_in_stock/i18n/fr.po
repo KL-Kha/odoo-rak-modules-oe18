@@ -1,0 +1,49 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* fal_project_in_stock
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-18 10:04+0000\n"
+"PO-Revision-Date: 2019-12-18 11:05+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: fr\n"
+"X-Generator: Poedit 2.2.3\n"
+
+#. module: fal_project_in_stock
+#: model:ir.model.fields,field_description:fal_project_in_stock.field_stock_move__fal_project_id
+msgid "Analytic Account"
+msgstr "Compte Analytique"
+
+#. module: fal_project_in_stock
+#: model_terms:ir.ui.view,arch_db:fal_project_in_stock.view_picking_search_fal_procex
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: fal_project_in_stock
+#: model:ir.model.fields,field_description:fal_project_in_stock.field_stock_picking__fal_project_numbers
+#: model_terms:ir.ui.view,arch_db:fal_project_in_stock.view_picking_search_fal_procex
+msgid "Project Numbers"
+msgstr "Numéros Projet"
+
+#. module: fal_project_in_stock
+#: model:ir.model,name:fal_project_in_stock.model_stock_move
+msgid "Stock Move"
+msgstr "Mouvement de Stock"
+
+#. module: fal_project_in_stock
+#: model:ir.model.fields,help:fal_project_in_stock.field_stock_picking__fal_project_numbers
+msgid "The projects."
+msgstr "Les Projets."
+
+#. module: fal_project_in_stock
+#: model:ir.model,name:fal_project_in_stock.model_stock_picking
+msgid "Transfer"
+msgstr "Transfert"

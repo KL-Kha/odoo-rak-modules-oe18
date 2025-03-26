@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_stock_picking_fal_form" model="ir.ui.view">
+            <field name="name">view.stock.picking.fal.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='other_infos']/field[@name='company_id']" position="after">
+                    <field name="fal_project_numbers" groups="analytic.group_analytic_accounting"/>
+                </xpath>
+                <xpath expr="//field[@name='move_ids_without_package']//list/field[@name='product_id']" position="after">
+                    <field name="fal_project_id" groups="analytic.group_analytic_accounting"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="view_picking_tree_fal_procex" model="ir.ui.view">
+            <field name="name">stock.picking.tree_fal_procex</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <field name="origin" position="after">
+                    <field name="fal_project_numbers" groups="analytic.group_analytic_accounting"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_picking_search_fal_procex" model="ir.ui.view">
+            <field name="name">stock.picking.search.falprocex</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+            <field name="arch" type="xml">
+                <field name="picking_type_id" position="after">
+                    <field name="partner_id"/>
+                    <field name="fal_project_numbers" groups="analytic.group_analytic_accounting"/>
+                </field>
+                <group expand="0" position="inside">
+                    <filter name="partner" string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <filter name="project_numbers" string="Project Numbers" domain="[]" context="{'group_by':'fal_project_numbers'}" groups="analytic.group_analytic_accounting"/>
+                </group>
+            </field>
+        </record>
+    </data>
+</odoo>
