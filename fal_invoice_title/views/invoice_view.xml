@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_invoice_tree_add_title" model="ir.ui.view">
+            <field name="name">account.move.tree.fal.add.title</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="fal_title" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_form_add_title" model="ir.ui.view">
+            <field name="name">account.move.form.fal.add.title</field>
+            <field name="model">account.move</field>
+            <field name="priority">10</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/div[2]" position="inside">
+                    <label class="oe_edit_only" for="fal_title" string="Title"/>
+                    <h3><field name="fal_title" placeholder="Title"/></h3>
+                </xpath>
+            </field>
+        </record>
+
+        <!--Inherit invoice search view-->
+        <record id="view_account_inherit_search_add_title" model="ir.ui.view">
+          <field name="name">view_account_inherit_search</field>
+          <field name="model">account.move</field>
+          <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+          <field name="arch" type="xml">
+            <data>
+                <xpath expr="//search" position="inside">
+                  <field name="fal_title"/>
+                </xpath>
+            </data>
+          </field>
+        </record>
+
+        <!-- change PDF Report Name -->
+        <function name="write" model="ir.model.data">
+            <function name="search" model="ir.model.data">
+                <value eval="[('module', '=', 'account'), ('name', '=', 'email_template_edi_invoice')]"/>
+            </function>
+            <value eval="{'noupdate': False}"/>
+        </function>
+
+        <record id="account.email_template_edi_invoice" model="mail.template">
+            <!-- <field name="report_name">Invoice_{{(object.name or '').replace('/','_')}}{{object.state == 'draft' and '_draft' or ''}}{{object.fal_title and '_' or ''}}{{object.fal_title or ''}}</field> -->
+            <field name="subject">{{object.company_id.name}} Invoice (Ref {{object.name or 'n/a' }}) {{object.fal_title and '- ' or ''}}{{object.fal_title or ''}}</field>
+        </record>
+
+        <record id="account.account_invoices" model="ir.actions.report">
+            <field name="print_report_name">Invoice_{{(object.name or '').replace('/','_')}}{{object.state == 'draft' and '_draft' or ''}}{{object.fal_title and '_' or ''}}{{object.fal_title or ''}}</field>
+        </record>
+
+    </data>
+</odoo>
