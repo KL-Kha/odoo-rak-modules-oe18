@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="mjb_portal_share_external_domain" model="ir.config_parameter">
+            <field name="key">mjb_portal_share.external_domain</field>
+            <field name="value"></field>
+        </record>
+        <record id="mjb_portal_share_internal_domain" model="ir.config_parameter">
+            <field name="key">mjb_portal_share.internal_domain</field>
+            <field name="value"></field>
+        </record>
+        <record id="mjb_replace_internal_domain_in_mail_body_action" model="ir.actions.server">
+            <field name="name">MJB - Replace Internal Domain in Mail Body</field>
+            <field name="model_id" ref="mail.model_mail_mail"/>
+            <field name="state">code</field>
+            <field name="code"><![CDATA[
+        if records:
+            def need_to_filter_body(record):
+                is_portal_message = record.model == 'portal.wizard.user'
+                has_external = any(
+                    not partner.user_ids or any(
+                        user._is_public() or user.sudo().has_group('base.group_portal')
+                        for user in partner.user_ids
+                    )
+                    for partner in record.recipient_ids
+                )
+                return is_portal_message or has_external
+
+            for record in records:
+                if need_to_filter_body(record):
+                    external_domain = env['ir.config_parameter'].sudo().get_param('mjb_portal_share.external_domain')
+                    internal_domain = env['ir.config_parameter'].sudo().get_param('mjb_portal_share.internal_domain')
+                    if external_domain and internal_domain:
+                        record['body_html'] = (record.body_html or '').replace(internal_domain, external_domain)
+                        record['body'] = (record.body or '').replace(internal_domain, external_domain)
+            ]]></field>
+        </record>
+        <record id="mjb_replace_internal_domain_in_mail_body_automation" model="base.automation">
+            <field name="name">MJB - Replace Internal Domain on Mail Creation</field>
+            <field name="model_id" ref="mail.model_mail_mail"/>
+            <field name="trigger">on_create_or_write</field>
+            <field name="filter_pre_domain">[]</field>
+            <field name="filter_domain">[]</field>
+            <field name="action_server_ids" eval="[(4, ref('mjb_internal_external_domains.mjb_replace_internal_domain_in_mail_body_action'))]"/>
+        </record>
+
+    </data>
+</openerp>

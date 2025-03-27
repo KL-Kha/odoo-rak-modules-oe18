@@ -1,0 +1,97 @@
+<section class="oe_container">
+  <div class="oe_row oe_spaced">
+    <h2 class="oe_slogan" style="color:#2C0091;font-weight: bold;">Domain restriction for internal & public users</h2>
+    <h3 class="oe_slogan">Allows to restrict logins for internal users on an internal domain name, and for public/portal users on an external domain name.</h3>
+    <p style="font-size: 124%;">
+      This module allows you to forbid external users to login on Odoo when using an internal domain name, example: internal.mycompany.com
+      <br /> 
+      This modules allows you to forbid internal users to login on Odoo when using an external domain name, example: external.mycompany.com
+      <br /> 
+      This module allows you to only allow shared links to be visible for external users on the external domain (unique links for example like the web preview of a quotation on website)
+
+      <br /> 
+      Also, this module will automatically update all "internal domain" links in emails sent to external partners into "external domain links".
+      <br /> 
+      This means that your customers will only receive the external domain links.
+      <br /> 
+      Internal notifications for users will still use the internal domain link.
+      <br /> 
+
+      <strong>Important note: this module assumes that you have 2 domain names pointing to Odoo.</strong>
+    </p>
+    <p style="font-size: 124%;">
+      Works on community and enterprise versions.
+    </p>
+  </div>
+  </div>
+</section>
+<section class="oe_container">
+  <div class="oe_row oe_spaced">
+    <h2 class="oe_slogan" style="color:#2C0091;font-weight: bold;">How to use</h2>
+    <ul>
+      <li>Upload the module to your server.</li>
+      <li>Activate the module</li>
+      <li>Activate the developper mode</li>
+      <li>Go to Settings > Technical > Parameters > System Parameters</li>
+      <li>Modify the value of parameter mjb_portal_share.external_domain to your external domain: example external.domain.com</li>
+      <li>Modify the value of parameter mjb_portal_share.internal_domain to your internal domain: example internal.domain.com</li>
+      <li>That's it !</li>
+    </ul>
+    
+    <br /> 
+    Examples you can do to test:
+    <br /> 
+    - on a quotation, try to send it by email to a contact: the email sent will have links which points to the external domain
+    <br /> 
+    - on a contact, try to grant access to the customer portal: the email sent will have links which points to the external domain
+    <br /> 
+    - Now, try to open these external links while NOT being logged into odoo: both of them should work
+    <br /> 
+    - Try to login into odoo from the external link, using a user account: you will be blocked
+    <br /> 
+    - Try to login into odoo from the external link, using a portal account: you will be able to access the portal
+    <br /> 
+    - Try to login into odoo from the internal link, using a user account: you will be able to access odoo backend
+    <br /> 
+    - Try to login into odoo from the internal link, using a portal account: you will be blocked
+    <br /> 
+  </div>
+</section>
+
+
+<section class="oe_container oe_dark">
+  <div class="oe_row oe_spaced">
+    <h2 class="oe_slogan" style="color:#2C0091;font-weight: bold;">Help & Support</h2>
+    <h3 class="oe_slogan">Please send your feedbacks for quick support at the links below.</h3>
+</section>
+
+<section class="oe_container oe_dark">
+  <div class="oe_row oe_spaced">
+    <h2 class="oe_slogan" style="color:#2C0091;font-weight: bold;">About Majorbird</h2>
+    <p style="font-size: 124%;">
+      Majorbird is an ERP and CRM integrator specialized in System. We provide services in Germany and Asia. We aim to
+      provide cost efficient tailored solutions for SMEs.
+      <br /> 
+      We are an official odoo partner: <a href="http://www.odoo.com/partners/majorbird-2713466" > See our page here </a>
+    </p>
+    <br />
+    <p style="font-size: 124%;">
+      Our target is to bring enterprise grade business software and training, which is made possible by System and our
+      experience. We are a young company with highly qualified consultants, developers and software architects who
+      worked on such systems for the last 8 years either on operations side or as consultants in other integrators. We
+      are currently growing our customer base aggressively.</p>
+    <br />
+    <div class="text-center">
+      <a class="btn btn-primary btn-lg mt8"
+        style="color: rgb(255, 255, 255) !important; position: relative; overflow: hidden;"
+        href="mailto:odoo@majorbird.cn?subject=Odoo Apps | Internal External Domains"><span class="o_ripple"
+          style="height: 90px; width: 90px; top: -23.1875px; left: 4.34375px;"></span><i class="fa fa-envelope"></i>
+        Email </a>
+      <a class="btn btn-primary btn-lg mt8"
+        style="color: rgb(255, 255, 255) !important; position: relative; overflow: hidden;"
+        href="https://majorbird.cn/" target="_blank"><span class="o_ripple"
+          style="height: 125px; width: 125px; top: -54.5156px; left: -17.9688px;" target="_blank"></span><i
+          class="fa fa-phone"></i> Contact Us </a>
+    </div>
+  </div>
+</section>
