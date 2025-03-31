@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_x_mjb_certification_form" model="ir.ui.view">
+        <field name="name">x_mjb_certification.form</field>
+        <field name="model">x_mjb_certification</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="x_name"/>
+                        </group>
+                        <group>
+                            <field name="x_country_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_x_mjb_certification_tree" model="ir.ui.view">
+        <field name="name">x_mjb_certification.tree</field>
+        <field name="model">x_mjb_certification</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="x_name"/>
+                <field name="x_country_ids" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="x_mjb_certification_action" model="ir.actions.act_window">
+        <field name="name">Country Certification</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">x_mjb_certification</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Certification
+            </p>
+        </field>
+    </record>
+
+    <!-- Vodafone Object Type Menu -->
+    <menuitem id="x_mjb_certification_menu"
+              parent="sale.menu_sale_config"
+              name="Country Cerification"
+              action="x_mjb_certification_action"
+              sequence="10"/>
+
+</odoo>
