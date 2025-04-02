@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_quality_check_wizard_tags,access_quality_check_wizard_tags,model_quality_check_wizard_tags,base.group_user,1,1,1,1
+access_quality_check_tags,access_quality_check_tags,model_quality_check_tags,base.group_user,1,1,1,1

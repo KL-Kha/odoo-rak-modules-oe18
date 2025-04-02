@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="quality_check_wizard_form_view" model="ir.ui.view">
+        <field name="name">Quality Check Wizard inherit</field>
+        <field name="model">quality.check.wizard</field>
+        <field name="inherit_id" ref="quality_control.view_quality_check_wizard" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[2]" position="after">
+                <field name="quality_check_ids" >
+                    <list editable="bottom">
+                        <field name="quality_tag_id" />
+                        <field name="quality_check" />
+                        <field name="test_value" />
+                    </list>
+                </field>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>
