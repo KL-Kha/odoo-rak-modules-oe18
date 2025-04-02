@@ -38,8 +38,8 @@ class PurchaseOrder(models.Model):
         self.notes = requisition.description
         self.date_order = fields.Datetime.now()
 
-        if requisition.type_id.line_copy != 'copy':
-            return
+        # if requisition.type_id.line_copy != 'copy':
+        #     return
 
         # Create PO lines if necessary
         order_lines = []
@@ -69,8 +69,8 @@ class PurchaseOrder(models.Model):
                 product_qty = line.product_qty
                 price_unit = line.price_unit
 
-            if requisition.type_id.quantity_copy != 'copy':
-                product_qty = 0
+            # if requisition.type_id.quantity_copy != 'copy':
+            #     product_qty = 0
 
             # Create PO line
             order_line_values = line._prepare_purchase_order_line(

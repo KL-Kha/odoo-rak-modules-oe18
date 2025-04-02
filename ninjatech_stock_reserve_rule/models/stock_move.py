@@ -162,5 +162,5 @@ class StockMove(models.Model):
             [('id', 'child_of', warehouse.view_location_id.id), ('usage', '=', 'view')],
             ['id'],
         )]
-        logger.info(f"warehouse locations: {wh_location_ids.mapped('name')}")
+        logger.info(f"warehouse locations: {wh_location_ids}")
         return wh_location_ids
