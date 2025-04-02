@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_order_view_form_extend_rak" model="ir.ui.view">
+        <field name="name">purchase.order.form.extend.rak</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/list/field[@name='product_id']" position="after">
+                <field name="purchase_requisition_line_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_purchase_requisition_form_inherit_rak" model="ir.ui.view">
+        <field name="name">purchase.requisition.form.inherit.rak</field>
+        <field name="model">purchase.requisition</field>
+        <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='line_ids']/list/field[@name='qty_ordered']" position="after">
+                <field name="qty_received"/>
+                <field name="qty_remaining"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
