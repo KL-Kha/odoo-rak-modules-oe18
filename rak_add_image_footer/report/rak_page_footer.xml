@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="rak_page_footer">
+            <div class="footer">
+                <img src="/rak_add_image_footer/static/src/img/rak_footer1.png" alt="footer1" style="max-height: 45px;"/>
+                <img src="/rak_add_image_footer/static/src/img/rak_footer2.png" alt="footer2" style="max-height: 45px; float: right;"/>
+            </div>
+        </template>
+
+    </data>
+</odoo>

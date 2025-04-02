@@ -1,0 +1,14 @@
+<odoo>
+
+    <record id="quality_alert_form_view" model="ir.ui.view">
+        <field name="name">Quality alert form view</field>
+        <field name="model">quality.alert</field>
+        <field name="inherit_id" ref="quality_control.quality_alert_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="" position="">
+
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
