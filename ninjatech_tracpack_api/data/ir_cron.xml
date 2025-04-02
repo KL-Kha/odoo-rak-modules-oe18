@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_x_rak_mes_record" model="ir.cron">
+        <field name="name">Rak MES Cron</field>
+        <field name="model_id" ref="model_rak_mes_record"/>
+        <field name="state">code</field>
+        <field name="code">model.mes_record_cron()</field>
+        <field name="interval_number">11</field>
+        <field name="interval_type">hours</field>
+    </record>
+</odoo>
