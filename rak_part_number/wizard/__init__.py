@@ -1,0 +1,1 @@
+from . import pricelists_query_wiz

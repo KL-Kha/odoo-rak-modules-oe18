@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_manufacturers,access_manufacturers,model_manufacturers,,1,1,1,1
+access_manufacturer,access_manufacturer,model_manufacturer,,1,1,1,1
+access_pricelists_query_wiz,access_pricelists_query_wiz,model_pricelists_query_wiz,,1,1,1,1
+access_tracing_popa,access_tracing_popa,model_tracing_popa,,1,1,1,1
+access_tracing_popa_manager,tracing_popa_manager,model_tracing_popa,,1,1,1,1

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="pricelists_query_wiz_form_view" model="ir.ui.view">
+            <field name="name">pricelists_query_wiz_form_view.form</field>
+            <field name="model">pricelists.query.wiz</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="manufacturer_ids" options="{'no_open':True,'no_create':1,'no_create_edit':1}"
+                               domain="[('product_id', '=', product_id), ('active', '=', True)]"/>
+                        <field name="product_id" invisible="0"/>
+                    </sheet>
+                    <footer>
+                        <button string="Confirm" name="create_vendor" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_pricelists_query_wiz" model="ir.actions.act_window">
+            <field name="name">Add: Supplier Info</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pricelists.query.wiz</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="pricelists_query_wiz_form_view"/>
+<!--            <field name="groups_id" eval="[(4, ref('rma.group_rma_customer_user'))]"/>-->
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <record id="purchase_order_form_rak_inherit" model="ir.ui.view">
+            <field name="name">purchase.order.form.view.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='products']/field/list/field[@name='name']" position="after">
+                    <button name="%(action_pricelists_query_wiz)d" string="" type="action"
+                            icon="fa-list" context="{'default_product_id': product_id}"/>
+                    <field name="manufacturer_id" readonly="1"/>
+                    <field name="part_no"/>
+                    <!--                    context="{'default_product_id': product_id, 'default_partner_id': parent.partner_id}"-->
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="action_purchase_order_line_rak" model="ir.actions.act_window">
+            <field name="name">Purchase Order Line</field>
+            <field name="res_model">purchase.order.line</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <record id="purchase_requisition_form_rak_inherit" model="ir.ui.view">
+            <field name="name">purchase.requisition.form.view.inherit</field>
+            <field name="model">purchase.requisition</field>
+            <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='products']/field/list/field[@name='product_description_variants']" position="after">
+                    <button name="%(action_pricelists_query_wiz)d" string="" type="action"
+                            icon="fa-list" context="{'default_product_id': product_id}"/>
+                    <field name="manufacturer_id" readonly="1"/>
+                    <field name="part_no"/>
+<!--                    context="{'default_product_id': product_id, 'default_partner_id': parent.partner_id}"-->
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
