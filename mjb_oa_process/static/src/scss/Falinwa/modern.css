@@ -1,0 +1,42 @@
+#validationProcess_processActionBar {
+    width: 100%!important;
+    border-radius: 5px;
+    background-color: #eee;
+}
+
+.validationProcess_actionBtn {
+    width: 15%!important;
+    border: none;
+}
+
+.validationProcess_actionBtn span.o_stat_text.small {
+    display: none;
+}
+.validationProcess_light_grey_bg {
+    background-color: transparent;
+}
+
+#validationProcess_processInfoBar, #validationProcess_processHistoryBar  {
+    border-radius: 5px!important;
+    background-color: #f1f1f1;
+    margin-bottom: 15px;
+}
+#validationProcess_processHistoryBar  {
+    padding-bottom: 10px;
+}
+.validationProcess_infoBtn span.o_stat_text.small {
+    display: none;
+}
+.validationProcess_infoBtn, .validationProcess_historyBtn {
+    border: none;
+}
+.validationProcess_light_blue_bg {
+    background-color: #e0f8ff;
+    border-radius: 5px;
+}
+.validationProcess_light_green_bg {
+    background-color: transparent;
+}
+.validationProcess_light_green_bg .validationProcess_black{
+    color: #28a745;
+}
