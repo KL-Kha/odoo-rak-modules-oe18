@@ -58,7 +58,7 @@ class Manufacturer(models.Model):
         # print('--action-->>>>>>>>\n\n\n', action)
         return action
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
         res = super(Manufacturer, self).create(vals)
         if not res.product_id:

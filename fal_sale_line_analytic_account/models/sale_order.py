@@ -1,11 +1,18 @@
 from odoo import models, fields, api
 
+class SaleOrder(models.Model):
+    _inherit = "sale.order"
+
+    analytic_account_id = fields.Many2one(
+        'account.analytic.account', string='Analytic Account', copy=False)
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     fal_analytic_account_id = fields.Many2one(
         'account.analytic.account', string='Analytic Account', copy=False)
+    analytic_account_id = fields.Many2one(
+        'account.analytic.account', string='Analytic Account', related='order_id.analytic_account_id', store=True, readonly=False)
 
     # transfer analytic account to invoice
     def _prepare_invoice_line(self, **optional_values):
@@ -13,6 +20,17 @@ class SaleOrderLine(models.Model):
         res['analytic_account_id'] = self.fal_analytic_account_id.id or self.order_id.analytic_account_id.id
         return res
 
+class AccountMove(models.Model):
+    _inherit = "account.move"
+
+    analytic_account_id = fields.Many2one(
+        'account.analytic.account', string='Analytic Account', copy=False)
+
+class AccountMoveLine(models.Model):
+    _inherit = "account.move.line"
+
+    analytic_account_id = fields.Many2one(
+        'account.analytic.account', string='Analytic Account', copy=False)
 
 class PurchaseOrderLine(models.Model):
     _inherit = "purchase.order.line"
