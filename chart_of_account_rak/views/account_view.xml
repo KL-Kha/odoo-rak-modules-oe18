@@ -1,0 +1,37 @@
+<odoo>
+    <record id="view_account_form_asset_inherit_rak" model="ir.ui.view">
+        <field name="name">account.account.form.rak</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='deprecated']" position="after">
+                <field name="is_analytic_account"/>
+                <field name="analytic_plan_id" invisible="not is_analytic_account" required="is_analytic_account"/>
+                <field name="is_hr_department"/>
+                <field name="is_partner"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_move_view_form" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.website_sale</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@id='aml_tab']/field[@name='line_ids']/list/field[@name='analytic_distribution']" position="after">
+                <field name="is_analytic_account" invisible="1"/>
+                <field name="analytic_plan_id" invisible="1" force_save="1" readonly="0"/>
+                <field name="is_hr_department" invisible="1"/>
+                <field name="is_partner" invisible="1"/>
+                <field name="hr_department_id" required="is_hr_department"/>
+            </xpath>
+            <!-- <xpath expr="//page[@id='aml_tab']/field[@name='line_ids']/list/field[@name='analytic_account_id']" position="attributes">
+                <attribute name="attrs">{'required': [('is_analytic_account', '=', True)]}</attribute>
+                <attribute name="domain">[('group_id','in',analytic_account_group_id)]</attribute>
+            </xpath> -->
+            <xpath expr="//page[@id='aml_tab']/field[@name='line_ids']/list/field[@name='partner_id']" position="attributes">
+                <attribute name="required">is_partner</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
