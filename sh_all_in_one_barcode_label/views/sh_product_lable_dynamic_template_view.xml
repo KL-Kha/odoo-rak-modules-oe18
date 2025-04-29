@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="sh_product_template_dynamic_view" model="ir.ui.view">
+        <field name="name">sh.product.template.dynamic.view</field>
+        <field name="model">sh.dynamic.template</field>
+        <field name="arch" type="xml">
+            <form string="Dynamic Product Label Template">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="sh_barcode_field_id" />
+                            <field name="sh_label_display" invisible="sh_barcode_field_id == False" />
+                            <field name="sh_barcode_height" />
+                            <field name="sh_barcode_width" />
+                            <field name="paperformat_id" invisible="True" />
+                            <field name="is_valid" invisible="True" />
+                            <field name="company_id" invisible="True" />
+                        </group>
+                        <group>
+                            <field name="sh_print_barcode_or_qr" widget="radio" />
+                            <field name="sh_barcode_type"
+                                   invisible="sh_print_barcode_or_qr == 'qr'"
+                                   required="sh_print_barcode_or_qr == 'barcode'" />
+                        </group>
+                    </group>
+                    <group>
+                        <group string="PDF Page Configuration">
+                            <field name="sh_page_orientation" />
+                            <field name="sh_page_height" />
+                            <field name="sh_page_width" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Dynamic Barcode Label Line">
+                            <field name="sh_template_line_ids">
+                                <form string="Dynamic Barcode Label">
+                                    <group>
+                                        <group>
+                                            <field name="type" widget="radio"/>
+                                            <field name="name"
+                                                   invisible="type == 'field'"
+                                                   required="type == 'text'" />
+                                            <field name="sh_field_id"
+                                                   invisible="type == 'text'"
+                                                   required="type == 'field'" />
+                                            <field name="ttype" invisible="True" />
+                                            <field name="image_height"
+                                                   invisible="ttype != 'binary'"
+                                                   required="ttype == 'binary'" />
+                                            <field name="image_width"
+                                                   invisible="ttype != 'binary'"
+                                                   required="ttype == 'binary'" />
+                                            <field name="sh_margin" />
+                                            <field name="sh_font_size" invisible="ttype == 'binary'" />
+                                            <field name="sh_font_color" widget="color" invisible="ttype == 'binary'" />
+                                            <field name="sh_position" />
+                                        </group>
+                                        <group>
+                                            <field name="sh_font_bold" invisible="ttype == 'binary'" />
+                                            <field name="sh_font_underline" invisible="ttype == 'binary'" />
+                                            <field name="sh_font_italic" invisible="ttype == 'binary'" />
+                                            <field name="sh_is_price_field" invisible="ttype != 'float'" />
+                                            <field name="currency_id"
+                                                   invisible="sh_is_price_field == False"
+                                                   required="sh_is_price_field == True" />
+                                            <field name="sh_currency_position"
+                                                   invisible="sh_is_price_field == False"
+                                                   required="sh_is_price_field == True" />
+                                            <field name="sh_pricelist_id"
+                                                   invisible="sh_is_price_field == False"
+                                                   groups="product.group_product_pricelist" />
+                                            <field name="company_id" invisible="True" />
+                                        </group>
+                                    </group>
+                                </form>
+                                <list>
+                                    <field name="sequence" widget="handle" />
+                                    <field name="type" widget="radio"/>
+                                    <field name="name"
+                                           invisible="type == 'field'"
+                                           required="type == 'text'" />
+                                    <field name="sh_field_id"
+                                           invisible="type == 'text'"
+                                           required="type == 'field'" />
+                                    <field name="ttype" invisible="True" />
+                                    <field name="image_height"
+                                           invisible="ttype != 'binary'"
+                                           required="ttype == 'binary'" />
+                                    <field name="image_width"
+                                           invisible="ttype != 'binary'"
+                                           required="ttype == 'binary'" />
+                                    <field name="sh_margin" />
+                                    <field name="sh_font_size" invisible="ttype == 'binary'" />
+                                    <field name="sh_font_color" widget="color" invisible="ttype == 'binary'" />
+                                    <field name="sh_position" />
+                                    <field name="sh_font_bold" invisible="ttype == 'binary'" />
+                                    <field name="sh_font_underline" invisible="ttype == 'binary'" />
+                                    <field name="sh_font_italic" invisible="ttype == 'binary'" />
+                                    <field name="sh_is_price_field" invisible="ttype != 'float'" />
+                                    <field name="currency_id"
+                                           invisible="sh_is_price_field == False"
+                                           required="sh_is_price_field == True" />
+                                    <field name="sh_currency_position"
+                                           invisible="sh_is_price_field == False"
+                                           required="sh_is_price_field == True" />
+                                    <field name="sh_pricelist_id"
+                                           invisible="sh_is_price_field == False"
+                                           groups="product.group_product_pricelist" />
+                                    <field name="company_id" invisible="True" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sh_product_lable_template_tree_view" model="ir.ui.view">
+        <field name="name">sh.product.lable.template.tree.view</field>
+        <field name="model">sh.dynamic.template</field>
+        <field name="arch" type="xml">
+            <list string="Dynamic Product Label Template">
+                <field name="name" />
+            </list>
+        </field>
+    </record>
+
+    <record id="sh_product_lable_template_action" model="ir.actions.act_window">
+        <field name="name">Dynamic Product Label Template</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sh.dynamic.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="sh_product_label_template_main" name="Product Barcode Label" groups="sh_all_in_one_barcode_label.group_product_barcode_label_template" web_icon="sh_all_in_one_barcode_label,static/description/menu.png"/>
+    <menuitem id="sh_product_label_template_sub" name="Product Barcode Label" parent="sh_product_label_template_main"/>
+    <menuitem id="sh_product_label_template" name="Product Barcode Label Template" parent="sh_product_label_template_sub" action="sh_product_lable_template_action"/>
+</odoo>
