@@ -1,0 +1,15 @@
+<odoo>
+
+
+    <record id="res_partner_form_view" model="ir.ui.view">
+        <field name="name">Res Partner Form View</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='property_payment_term_id']" position="attributes">
+                <attribute name="groups">account.group_account_manager</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
