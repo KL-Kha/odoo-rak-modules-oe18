@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+<!--        <template id="assets_backend" name="rowno_in_tree assets" inherit_id="web.assets_backend">-->
+<!--            <xpath expr="." position="inside">-->
+<!--            	<link rel="stylesheet" href="/highlight_out_of_stock_quantity/static/src/css/style.css" />-->
+<!--            </xpath>-->
+<!--        </template>-->
+
+
+        <record id="view_stock_move_line_detailed_operation_tree_inherit_stock_h" model="ir.ui.view">
+            <field name="name">stock.move.line.operations.tree.inherit</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
+            <field name="arch" type="xml">
+<!--                <xpath expr="//tree" position="attributes">-->
+<!--                    <attribute name="decoration-danger">move_id.reserved_availability &lt; product_uom_qty</attribute>-->
+<!--                </xpath>-->
+                <xpath expr="//field[@name='quantity']" position="inside">
+                    <field name="difference_qty"/>
+                    <!--<field name="plus_minus_symbol" string=" "/>-->
+                </xpath>
+            </field>
+        </record>
+
+        <record id="stock_picking_form_view_inherit" model="ir.ui.view">
+            <field name="name">stock.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='quantity']" position="before">
+                    <field name="difference_qty"/>
+                     <field name="red_line_display" invisible="0"/>
+                    <!--<field name="plus_minus_symbol" string=" "/>-->
+                </xpath>
+                <xpath expr="//field[@name='move_ids_without_package']/list" position="attributes">
+                    <!--<attribute name="decoration-danger">(not parent.immediate_transfer and state != 'done' and quantity_done &gt; reserved_availability and show_reserved_availability) or product_uom_qty &gt; product_qty1</attribute>-->
+
+                    <attribute name="decoration-danger">red_line_display and parent.state != 'done' and parent.state != 'cancel' and parent.related_show_hl_stock_diff</attribute>
+                    <attribute name="default_order">difference_qty desc</attribute>
+                </xpath>
+<!--                <xpath expr="//field[@name='product_uom_qty']" position="before">-->
+<!--                    <field name="product_qty1"/>-->
+<!--                </xpath>-->
+                <xpath expr="//field[@name='picking_type_id']" position="before">
+                    <field name="related_show_hl_stock_diff" invisible="1"/>
+                    <field name="hl_active" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="stock_picking_tree_view_inherit" model="ir.ui.view">
+            <field name="name">stock.picking.tree.inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+                    <field name="related_show_hl_stock_diff" invisible="1"/>
+                    <field name="hl_active" invisible="1"/>
+                </xpath>
+                 <xpath expr="//list" position="attributes">
+                    <attribute name="decoration-danger">state != 'done' and state != 'cancel' and related_show_hl_stock_diff == True and hl_active == True </attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="stock_move_tree_view_inherit" model="ir.ui.view">
+            <field name="name">stock.move.tree</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_tree"/>
+            <field name="arch" type="xml">
+                <!--<xpath expr="//field[@name='move_ids_without_package']/tree" position="attributes">-->
+                    <!--<attribute name="decoration-danger">product_uom_qty &gt; product_qty1</attribute>-->
+                <!--</xpath>-->
+                <xpath expr="//field[@name='product_uom_qty']" position="before">
+                    <field name="red_line_display" invisible="1"/>
+                    <field name="difference_qty"/>
+                    <!--<field name="plus_minus_symbol" string=" "/>-->
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="stock_move_line_tree_view_inherit" model="ir.ui.view">
+            <field name="name">stock.move.line.tree</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.view_move_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="attributes">
+                    <attribute name="class">plus_minus_symbol_class</attribute>
+                </xpath>
+                <!--<xpath expr="//field[@name='qty_done']" position="before">-->
+                    <!--&lt;!&ndash;<field name="plus_minus_symbol" string=" " style="font-size: 15px; font-weight: bolder;"/>&ndash;&gt;-->
+                    <!--<field name="plus_minus_symbol" string=" " class="plus_minus_symbol_field"/>-->
+                <!--</xpath>-->
+            </field>
+        </record>
+
+        <record id="mrp_production_form_view" model="ir.ui.view">
+            <field name="name">mrp.production.form</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_start']" position="replace">
+                    <field name="date_start" invisible="state in ('draft', 'confirmed')"/>
+<!--                    ('routing_id', '!=', False), -->
+                </xpath>
+                <xpath expr="//field[@name='date_finished']" position="replace">
+                    <field name="date_finished" required="True" invisible="state in ('draft', 'confirmed')"/>
+<!--                    ('routing_id', '!=', False),-->
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_picking_type_form_rak_inherit" model="ir.ui.view">
+            <field name="name">stock.picking.type.form.inherit</field>
+            <field name="model">stock.picking.type</field>
+            <field name="inherit_id" ref="stock.view_picking_type_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='warehouse_id']" position="after">
+                    <field name="show_hl_stock_diff"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

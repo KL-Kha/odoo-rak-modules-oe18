@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_account_move_reversal_view" model="ir.ui.view">
+        <field name="name">account.move.reversal.view</field>
+        <field name="model">account.move.reversal</field>
+        <field name="inherit_id" ref="account.view_account_move_reversal"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='reason']" position="before">
+                    <field name="please_specify"/>
+                </xpath>
+                <xpath expr="//field[@name='reason']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="reason"/>
+                    <field name="responsible_id"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>
