@@ -1,0 +1,35 @@
+<odoo>
+
+    <record id="ir_cron_stock_picking_tracking_notification" model="ir.cron">
+        <field name="name">Tracking Notification Email</field>
+        <field name="model_id" ref="ninjatech_shipping_reminder.model_stock_picking" />
+        <field name="state">code</field>
+        <field name="code">model.ir_cron_stock_picking_done()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+
+</odoo>
+
+<!--<table class="table table-striped">-->
+<!--    <thead>-->
+<!--        <tr style="font-weight:bold;">-->
+<!--            <td>Barcode</td>-->
+<!--            <td>SN</td>-->
+<!--            <td>EUI</td>-->
+<!--            <td>FW_VER</td>-->
+<!--            <td>Name</td>-->
+<!--            <td>Model</td>-->
+<!--        </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--        <tr>-->
+<!--            <td>918100T2</td>-->
+<!--            <td>918100T26040302001</td>-->
+<!--            <td></td>-->
+<!--            <td></td>-->
+<!--            <td>WisNode-Field Tester For LoRaWAN Network RAK10701-L /Gray Enclosure/US915</td>-->
+<!--            <td>RAK10701-L</td>-->
+<!--        </tr>-->
+<!--    </tbody>-->
+<!--</table>-->

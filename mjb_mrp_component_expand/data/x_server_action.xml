@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_server_component_expand" model="ir.actions.server">
+        <field name="name">RAK - MO Components Expansion</field>
+        <field name="model_id" ref="mrp.model_mrp_production"/>
+        <field name="state">code</field>
+        <field name="code"><![CDATA[
+
+def get_bom_qty(parent_product, component, list_component, qty):
+    component_boms = component.bom_ids
+    parent_product_name =  parent_product.barcode if parent_product else ''
+    if len(component_boms) >= 1:
+        normal_domain = [('product_tmpl_id', '=', component.product_tmpl_id.id), ('type', '=', 'normal')]
+        normal_component_bom = check_bom(
+            env['mrp.bom'].search(normal_domain, order='create_date', limit=1))
+        if normal_component_bom:
+            component_bom = normal_component_bom
+        else:
+            domain = [('product_tmpl_id', '=', component.product_tmpl_id.id)]
+            component_bom = check_bom(
+                env['mrp.bom'].search(domain, order='create_date', limit=1))
+
+        if component_bom and component_bom.type == 'normal':
+            if component_bom.x_studio_add_product_to_components:
+                list_component.append([component, 1*qty / component_bom.product_qty,' , '.join([parent_product_name,str(component.barcode)])])
+            else:
+                list_component.append([component, 0, parent_product_name])
+            if component_bom.bom_line_ids != []:
+                for line in component_bom.bom_line_ids:
+                    line_qty = (qty * line.product_qty) / component_bom.product_qty
+                    if line.product_id.bom_ids:
+                        get_bom_qty(component, line.product_id, list_component, qty)
+                    else:
+                        list_component.append([line.product_id, line_qty, component.barcode])
+        elif component_bom and component_bom.type != 'normal':
+            list_component.append([component, 1*qty / component_bom.product_qty, parent_product_name])
+    else:
+        list_component.append([component, qty, parent_product_name])
+
+    return list_component
+
+def check_bom(bom):
+    if bom:
+        if len(bom.bom_line_ids) == 0 and not bom.x_studio_add_product_to_components:
+            raise UserError('The BOM - ' + bom.display_name + ' - has no component !')
+        else:
+            return bom
+    else:
+        return False
+
+
+def merge_list_component(list_component):
+    merged_list_component = {}
+    for rec in list_component:
+        if rec[0] not in merged_list_component.keys():
+            merged_list_component[rec[0]] = []
+            merged_list_component[rec[0]]+= [rec[1],rec[2]]
+        else:
+            merged_list_component[rec[0]][0] += rec[1]
+            if rec[2]:
+                if merged_list_component[rec[0]][1]:
+                    merged_list_component[rec[0]][1] += ' , ' + rec[2]
+                else:
+                    merged_list_component[rec[0]][1] += rec[2]
+    return merged_list_component
+
+def add_main_product_to_component(mo,bom):
+    if bom.x_studio_add_product_to_components is False:
+        return False
+    else:
+        val = mo._get_move_raw_values(bom.product_tmpl_id.product_variant_id,1,bom.product_tmpl_id.uom_id,False,False)
+        return val
+
+if record.state == 'draft':
+    current_mo_bom_id = record.bom_id
+    if current_mo_bom_id and current_mo_bom_id.bom_line_ids:
+        mo_component_expansion = []
+        for line in current_mo_bom_id.bom_line_ids:
+            mo_sub_bom = []
+            mo_component_expansion += get_bom_qty(record.product_id, line.product_id, mo_sub_bom, line.product_qty * record.product_qty)
+        if record.move_raw_ids:
+            for move in record.move_raw_ids:
+                move.write({'state':'cancel'})
+            record.write({
+                'move_raw_ids':[(5,)]
+            })
+        vals = []
+        for rec_key,rec_value in merge_list_component(mo_component_expansion).items():
+            raw_values = record._get_move_raw_values(rec_key,rec_value[0],rec_key.uom_id,False,False)
+            raw_values['x_parent_product'] = rec_value[1]
+            vals.append((0, 0, raw_values))
+        check_product_component = add_main_product_to_component(record,record.bom_id)
+        if check_product_component:
+            check_product_component['x_parent_product'] = record.product_id.barcode
+            vals.append(check_product_component)
+        record.write({'move_raw_ids': vals,
+                      'x_expand_component_flag':True})
+    else:
+        raise UserError('Please check your main BOM of this MO !')
+else:
+    raise UserError('Expand Components is only available for draft MO')
+
+
+
+        ]]></field>
+    </record>
+</odoo>

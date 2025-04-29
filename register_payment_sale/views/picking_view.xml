@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_inherit_rak" model="ir.ui.view">
+        <field name="name">stock.picking.form.rak</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="after">
+                <field name="is_finance_approval_available" invisible="1"/>
+                <field name="warning_finance"
+                       invisible="state == 'done' or not is_finance_approval_available" readonly="1" force_save="1"/>
+            </xpath>
+            <xpath expr="//button[@name='button_validate'][hasclass('o_btn_validate')]" position="replace">
+                <button name="button_validate"
+                        invisible="state not in [('waiting', 'confirmed')] or is_finance_approval_available"
+                        string="Confirm" type="object" groups="stock.group_stock_user" class="o_btn_validate"/>
+            </xpath>
+            <xpath expr="//button[@name='action_assign']" position="replace">
+                <button name="action_assign" invisible="not show_check_availability or is_finance_approval_available" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user"/>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="sale_id" invisible="1"/>
+                <field name="condition_fullfill" invisible="1"/>
+                <field name="x_studio_finance_appoved"
+                       invisible="not condition_fullfill"
+                       force_save="1" readonly="1"/>
+
+            </xpath>
+        </field>
+    </record>
+</odoo>

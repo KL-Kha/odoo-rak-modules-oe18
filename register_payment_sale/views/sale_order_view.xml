@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <record id="view_order_form_sale" model="ir.ui.view">
+            <field name="name">view.order.form.dorsan</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+<!--                    <button name="action_finance_approved" type="object" string="Finance Approved" attrs="{'invisible' : ['|','|','|',('x_studio_finance_appoved', '=', True),('x_studio_delivery_payments_required', '=', False),('payment_request_required', '=', False), ('if_offline', '=', False)]}" groups="account.group_account_manager"/>-->
+<!--                    <button name="action_finance_reject" type="object" string="Finance Reject" attrs="{'invisible' : ['|','|','|',('x_studio_finance_appoved', '=', False),('x_studio_delivery_payments_required', '=', False),('payment_request_required', '=', False), ('if_offline', '=', False)]}" groups="account.group_account_manager"/>-->
+                    <button name="action_advance_payment_sale_order" type="object" string="Payment Request" invisible="global_channel_id != 4"/>
+                    <button name="action_fetch_carrier_shipping_rates" type="object" string="Fetch Carrier Shipping Rates" />
+                    <button name="action_cancel_payment_sale_order" type="object" string="Cancel Payment"
+                            invisible="advance_payment_count == 0 or not x_studio_delivery_payments_required or is_any_picking_done or if_offline"
+                            groups="account.group_account_manager" />
+<!--                    <button name="action_cancel_payment_sale_order" type="object" string="Cancel Payment"-->
+<!--                            confirm="Are you sure you want to Cancel Payment?"-->
+<!--                            attrs="{'invisible' : ['|','|','|','|',('advance_payment_count','=',0),-->
+<!--                            ('x_studio_delivery_payments_required', '=', False),-->
+<!--                            ('is_any_picking_done', '=', True),-->
+<!--                            ('payment_request_required', '=', False), ('if_offline', '=', False)]}" groups="account.group_account_manager"/>-->
+                </xpath>
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="x_studio_type" options="{'no_create': True}"/>
+                    <field name="global_channel_id" options="{'no_create': True}"/>
+                    <field name="x_studio_delivery_payments_required" invisible="1"/>
+                    <field name="payment_request_required" invisible="1"/>
+                    <field name="if_offline" invisible="1"/>
+                    <field name="is_any_picking_done" invisible="1"/>
+                    <field name="x_studio_finance_appoved" force_save="1" readonly="1"
+                           invisible="not x_studio_delivery_payments_required or not payment_request_required or not if_offline"
+                    />
+                    <field name="total_register_payment"/>
+                    <field name="total_request_amount"/>
+                    <field name="due_amount"/>
+                </xpath>
+                <xpath expr="//div[@class='oe_button_box']" position="inside">
+                    <button name="action_view_advance_payment" type="object" class="oe_stat_button" icon="fa-pencil-square-o"
+                            invisible="advance_payment_count == 0 and advance_account_payment_ids == []">
+                        <field name="advance_payment_count" widget="statinfo" string="Payments"/>
+                    </button>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Payments">
+                        <field name="advance_account_payment_ids" readonly="1"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        <record id="view_quotation_tree_rak" model="ir.ui.view">
+            <field name="name">sale.order.tree.inherit.sale.rak</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_status']" position="after">
+                    <field name="total_register_payment" sum="Total Registered Payment Amount"/>
+                    <field name="total_request_amount" sum="Total Requested Payment Amount"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

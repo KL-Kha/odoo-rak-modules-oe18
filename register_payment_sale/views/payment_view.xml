@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+
+        <record id="view_payment_term_form_rak" model="ir.ui.view">
+            <field name="name">view.account.payment.term.form.rak</field>
+            <field name="model">account.payment.term</field>
+            <field name="inherit_id" ref="account.view_payment_term_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="x_studio_delivery_payments_required"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="view_account_payment_form_rak" model="ir.ui.view">
+            <field name="name">view.account.payment.form.rak</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='journal_id']" position="after">
+                    <field name="receipt"/>
+                    <field name="payment_number" readonly="1" invisible="partner_type != 'customer'"/>
+                    <field name="x_studio_finance_appoved" invisible="1"/>
+                    <field name="is_any_picking_done"/>
+                </xpath>
+                <xpath expr="//button[@name='action_draft']" position="replace">
+                    <button name="action_draft" string="Reset To Draft" type="object" class="btn btn-secondary"
+                            confirm="The picking order already done, Are you still want to modify the payments?"
+                            invisible="not is_any_picking_done or state not in ['posted', 'cancel']"
+                            context="{'is_any_picking_done': True}"
+                            groups="account.group_account_invoice" data-hotkey="w"/>
+
+                    <button name="action_draft" string="Reset To Draft" type="object" class="btn btn-secondary"
+                            invisible="is_any_picking_done or state not in [('posted', 'cancel')]"
+                            context="{'is_any_picking_done': False}"
+                            groups="account.group_account_invoice" data-hotkey="w"/>
+                </xpath>
+                <xpath expr="//button[@name='action_cancel']" position="replace">
+                    <button name="action_cancel" string="Cancel" type="object"
+                            confirm="The picking order already done, Are you still want to modify the payments?"
+                            invisible="not is_any_picking_done or state != 'draft'"
+                            context="{'is_any_picking_done': True}"
+                            data-hotkey="z"/>
+
+                    <button name="action_cancel" string="Cancel" type="object"
+                            invisible="is_any_picking_done or state != 'draft'"
+                            context="{'is_any_picking_done': False}"
+                            data-hotkey="z"/>
+                </xpath>
+<!--                <xpath expr="//group[@name='partner_group']" position="inside">-->
+<!--                    <field name="payment_number" readonly="1" attrs="{'invisible':[('partner_type', '!=', 'customer')]}"/>-->
+<!--                </xpath>-->
+                <xpath expr="//sheet" position="inside">
+                    <notebook>
+                        <page string="Sale Orders" invisible="partner_type != 'customer'">
+                            <field name="sale_order_ids" readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="sale_order_id" readonly="0" domain="[('partner_id', '=', parent.partner_id)]"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="partner_id"/>
+                                    <field name="total_register_payment" readonly="1"/>
+                                    <field name="total_request_amount" readonly="1"/>
+                                    <field name="due_amount" readonly="1"/>
+                                    <field name="amount_total" readonly="1"/>
+                                    <field name="request_amount" readonly="1"/>
+                                    <field name="register_amount"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Receipts">
+                            <field name="receipt_attachments">
+                                <list editable="bottom">
+                                    <field name="receipt" required="1"/>
+                                    <field name="name"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_request_payment_tree" model="ir.ui.view">
+            <field name="name">account.request.payment.tree</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_tree"/>
+            <field name="arch" type="xml">
+                <field name="state" position="after">
+                    <field name="payment_number"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

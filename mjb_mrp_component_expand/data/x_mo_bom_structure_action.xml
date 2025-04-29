@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_server_mo_bom_structure" model="ir.actions.server">
+        <field name="name">RAK - MO BOM Structure</field>
+        <field name="model_id" ref="mrp.model_mrp_production"/>
+        <field name="state">code</field>
+        <field name="code">
+if record and record.bom_id:
+    action = {
+                'type': 'ir.actions.client',
+                'tag': 'mrp_bom_report',
+                'name':'BoM Structure',
+                'context': {'model': 'report.mrp.report_bom_structure','active_id':record.bom_id.id},
+            }
+        </field>
+    </record>
+</odoo>

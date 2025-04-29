@@ -1,0 +1,55 @@
+<odoo>
+    <record id="purchase_requisition_reminder_mail" model="mail.template">
+        <field name="name">Purchase requisition Reminder Mail</field>
+        <field name="model_id" ref="purchase_requisition.model_purchase_requisition_line"/>
+        <field name="subject">Purchase Requisition Reminder</field>
+        <field name="email_from">online@rakwireless.com</field>
+        <field name="reply_to">online@rakwireless.com</field>
+        <field name="email_to">{{ctx.get('partner_email')}}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Hi <t t-out="ctx.get('partner_name')" />, <br />
+                    这个PA单快到要求的交期了，但是你还没转成CG单，为了仓库能及时收货上架，请你及时进系统查看并处理，谢谢！
+                    <br/><br/>
+                        <table class="table table-bordered">
+                            <tr>
+                                <td>Purchase Agreement</td>
+                                <td>Product Name</td>
+                                <td>Scheduled Date</td>
+                            </tr>
+                            <tr t-foreach="ctx.get('list_of_agreement_lines').items()" t-as="item">
+                                <td><t t-out="item[0]" /></td>
+                                <td>
+                                    <table>
+                                        <tr t-foreach="item[1]" t-as="product">
+                                            <td><t t-out="product[0]"/></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td>
+                                    <table>
+                                        <tr t-foreach="item[1]" t-as="product">
+                                            <td><t t-out="product[1]"/></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                    <br/><br/>
+                    Best regards,
+                    <br/><br/>
+                    Company
+                </p>
+            </div>
+        </field>
+
+        <field name="lang">{{object.sudo().create_uid.lang}}</field>
+        <field name="auto_delete" eval="False"/>
+    </record>
+
+</odoo>
+
+

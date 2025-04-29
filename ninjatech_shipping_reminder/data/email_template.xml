@@ -1,0 +1,77 @@
+<odoo>
+
+    <record id="pick_done_email_notification" model="mail.template">
+        <field name="name">Pick Done Email Notification</field>
+        <field name="subject">Shipment Notification and Attached Invoice for Order {{object.sale_id.name}}</field>
+        <field name="model_id" ref="ninjatech_shipping_reminder.model_stock_picking"/>
+        <field name="email_to">{{object.partner_id.email}}</field>
+        <field name="email_from">inquiry@rakwireless.com</field>
+        <field name="reply_to">inquiry@rakwireless.com</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin:0px 0 12px 0;box-sizing:border-box;">
+                    Hello <t t-out="object.partner_id.name or ''" data-oe-t-inline="true" contenteditable="false">
+                    RECIPIENT</t>,
+                    <br/>
+                    <br/>
+                    We are pleased to inform you that your recent order
+                    <t t-out="object.sale_id.x_studio_related_so or object.sale_id.name"/>
+
+                    has
+                    been successfully shipped. As part of our commitment to transparency and customer satisfaction,
+                    we have compiled the product details into a CSV file, which is attached to this email for your
+                    reference.
+
+                    Please note that the CSV file contains detailed product information,
+                    including serial numbers (SN) and DEVEUI, only for applicable items such
+                    as gateways and complete devices. For module-type products, the DEVEUI information
+                    will be included. If your order includes such items, you will find the relevant details
+                    in the attached file.
+
+                    Additionally, we would like to provide you with the following logistics information:
+                    <ul>
+                        <li>
+                            Tracking Number:
+                            <t t-out="object.carrier_tracking_ref"/>
+                        </li>
+                        <li>
+                            Carrier:
+                            <t t-out="object.carrier_id.name"/>
+                        </li>
+                    </ul>
+                    <br/>
+                    The products included in this shipment are as follows:
+                    <br/>
+                    <ul>
+                        <t t-foreach="object.move_ids_without_package" t-as="product_line">
+                            <li>
+                                <t t-out="product_line.product_id.display_name"/>
+                                :
+                                <t t-out="product_line.quantity_done"/>
+                            </li>
+                        </t>
+                    </ul>
+                    <br/>
+                    Please feel free to download and review the attached files. Should you have any questions or require
+                    further assistance regarding your shipment or the enclosed documents, please do not hesitate to
+                    contact us. We are dedicated to ensuring a smooth delivery process and your utmost satisfaction.
+                    <br/>
+
+                    Thank you for choosing our products/services. We appreciate your business and look forward to
+                    serving you again in the future.
+                    <br/>
+
+                    Best regards,<br></br>
+
+                    Your RAK Team
+                </p>
+            </div>
+        </field>
+        <!--        <field name="report_name">MOM_${(object.name or '').replace('/','_')}</field>-->
+        <!--        <field name="report_template" ref="studio_customization.studio_report_docume_15f07320-d911-41ed-9447-013df92de65e_copy_1"/>-->
+
+        <field name="lang">{{object.sudo().create_uid.lang}}</field>
+        <field name="auto_delete" eval="False"/>
+    </record>
+
+</odoo>

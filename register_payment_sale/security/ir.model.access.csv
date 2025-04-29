@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_receipt_account_payment,receipt.account.payment.access,register_payment_sale.model_receipt_account_payment,,1,1,1,1
+access_sale_order_payment,sale.order.payment.access,register_payment_sale.model_sale_order_payment,,1,1,1,1
+access_sale_order_wizard,sale.order.wizard.access,register_payment_sale.model_sale_order_wizard,,1,1,1,1
+access_advance_payment_dorsan,advance.payment.dorsan.access,register_payment_sale.model_advance_payment_dorsan,,1,1,1,1
+access_global_channel_ept,global.channel.ept.access,register_payment_sale.model_global_channel_ept,,1,1,1,1
+access_sale_type,sale.type.access,register_payment_sale.model_sale_type,,1,1,1,1
+ir_actions_act_window_view_for_payment,ir.actions.act.window.view.for.payment,base.model_ir_actions_act_window_view,,1,1,1,1
+ir_actions_act_window_for_payment,ir.actions.act.window.for.payment,base.model_ir_actions_act_window,,1,1,1,1

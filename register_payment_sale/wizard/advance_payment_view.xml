@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_advance_payment_dorsan" model="ir.ui.view">
+            <field name="name">advance.payment.view</field>
+            <field name="model">advance.payment.dorsan</field>
+            <field name="arch" type="xml">
+                <form string="Advance Payment">
+                    <group>
+                        <group>
+                            <field name="journal_id" required="1" domain="[('type', 'in', ('bank', 'cash'))]"/>
+                            <field name="payment_type" required="1"/>
+                            <field name="partner_type" required="1"/>
+                            <field name="receipt"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" required="1"/>
+                            <field name="status" required="1"/>
+                            <field name="amount" required="1" readonly="1" force_save="1"/>
+                            <field name="memo"/>
+<!--                            <field name="total_due_amount"/>-->
+<!--                            <field name="total_payment_amount"/>-->
+                        </group>
+                        <field name="sale_order_ids" readonly="0">
+                                <list editable="bottom">
+                                    <field name="sale_order_id"/>
+                                    <field name="partner_id" readonly="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="total_register_payment" readonly="1"/>
+                                    <field name="total_request_amount" readonly="1"/>
+                                    <field name="due_amount" readonly="1"/>
+                                    <field name="amount_total" readonly="1"/>
+                                    <field name="request_amount"/>
+                                </list>
+                            </field>
+                    </group>
+                    <footer>
+                        <button name="confirm" string="Submit" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_advance_payment_sale_order" model="ir.actions.act_window">
+            <field name="name">advance.payment.action</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">advance.payment.dorsan</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_advance_payment_dorsan"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_mrp_component_expand_form" model="ir.ui.view">
+        <field name="name">mrp_component_expand_inherit_form</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <field name="x_expand_component_flag"/>
+            </xpath>
+            <xpath expr="//header/button[@name='action_confirm']" position="after">
+                <button name="%(action_server_component_expand)d" type="action" string="Expand Components"
+                        invisible="x_expand_component_flag == True or state != 'draft'"  class="btn btn-success"/>
+                <button name="%(action_server_component_expand)d" type="action" string="Re-expand Components"
+                        invisible="x_expand_component_flag == False or state != 'draft'" class="btn btn-light"/>
+            </xpath>
+            <xpath expr="//sheet/notebook/page[@name='components']/field[@name='move_raw_ids']/list/field[@name='product_id']"  position="after">
+                <field name="x_parent_product"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
