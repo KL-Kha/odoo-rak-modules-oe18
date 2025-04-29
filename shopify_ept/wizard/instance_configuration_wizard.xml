@@ -25,7 +25,6 @@
                                    placeholder="●●●●●●●●●●●●●●●●●●●●●●●●●"
                                    readonly="context.get('is_already_instance_created', False)" string="Access Token"/>
                             <field name='shopify_shared_secret' required="1"
-                                   placeholder="shopify_shared_secret"
                                    readonly="context.get('is_already_instance_created', False)"/>
                         </group>
                     </group>
