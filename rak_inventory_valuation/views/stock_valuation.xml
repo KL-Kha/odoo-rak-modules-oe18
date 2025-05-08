@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+    <record id="view_stock_valuation_layer_search_inherit" model="ir.ui.view">
+    <field name="name">stock.valuation.layer.search.inherit</field>
+    <field name="model">stock.valuation.layer</field>
+    <field name="inherit_id" ref="stock_account.view_inventory_valuation_search"/>
+    <field name="arch" type="xml">
+        <xpath expr="//filter[@name='group_by_product_id']" position="after">
+            <filter string="0-30 Days" name="0_30_days" domain="[('inventory_age', '&gt;=', 0), ('inventory_age', '&lt;=', 30)]"/>
+            <filter string="30-60 Days" name="30_60_days" domain="[('inventory_age', '&gt;', 30), ('inventory_age', '&lt;=', 60)]"/>
+            <filter string="60-90 Days" name="60_90_days" domain="[('inventory_age', '&gt;', 60), ('inventory_age', '&lt;=', 90)]"/>
+            <filter string="Over 90 Days" name="over_90_days" domain="[('inventory_age', '&gt;', 90), ('inventory_age', '&lt;=', 180)]"/>
+            <filter string="Over 180 Days" name="over_180_days" domain="[('inventory_age', '&gt;', 180)]"/>
+        </xpath>
+    </field>
+</record>
+
+
+
+
+    </data>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="fal_bom_alternative_material_form_view" model="ir.ui.view">
+            <field name="name">mrp.bom.alternative.view</field>
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='bom_line_ids']/list/field[@name='product_id']" position="after">
+                    <field name="barcode"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
