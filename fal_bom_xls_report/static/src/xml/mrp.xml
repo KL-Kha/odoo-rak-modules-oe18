@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mrp.BomOverviewComponent" t-inherit-mode="extension">
+        <xpath expr="//BomOverviewControlPanel" position="attributes">
+            <attribute name="exportXLSX.bind">onExportXLSX</attribute>
+        </xpath>
+    </t>
+    <t t-inherit="mrp.BomOverviewControlPanel" t-inherit-mode="extension">
+        <xpath expr="//button[@t-on-click='() => this.props.print()']" position="before">
+            <button class="btn btn-primary" t-on-click="props.exportXLSX">Export XLSX Unfolded</button>
+        </xpath>
+    </t>
+</templates>
