@@ -25,3 +25,4 @@ class fal_vprocess_execution(models.Model):
 
     # def _valid_field_parameter(self, field, name):
     #     return name == 'track_visibility' or super()._valid_field_parameter(field, name)
+    

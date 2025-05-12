@@ -36,8 +36,8 @@ class fal_vprocess(models.Model):
     
     step_ids = fields.One2many("fal.vprocess.step", 'process_id', 'Steps', ondelete='cascade')
 
-    # def _valid_field_parameter(self, field, name):
-    #     return name == 'ondelete' or super()._valid_field_parameter(field, name)
+    def _valid_field_parameter(self, field, name):
+        return name == 'ondelete' or super()._valid_field_parameter(field, name)
 
     #Change related field into compute (Migration V13 - V15), ir_filter changed into single quote when saved in Odoo15
     #JSON.parse() string format must on double quote else error
@@ -46,8 +46,6 @@ class fal_vprocess(models.Model):
         for record in self:
             if record.trigger_id and record.trigger_id.domain:
                 record.trigger_domain = record.trigger_id.domain.replace("'", '"')
-                record.trigger_domain = record.trigger_domain.replace("(", "[")
-                record.trigger_domain = record.trigger_domain.replace(")", "]")
             else:
                 record.trigger_domain = False
 
@@ -55,7 +53,5 @@ class fal_vprocess(models.Model):
         for record in self:
             if record.filter_id and record.filter_id.domain:
                 record.filter_domain = record.filter_id.domain.replace("'", '"')
-                record.filter_domain = record.filter_domain.replace("(", "[")
-                record.filter_domain = record.filter_domain.replace(")", "]")
             else:
                 record.filter_domain = False

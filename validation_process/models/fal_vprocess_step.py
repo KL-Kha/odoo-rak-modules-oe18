@@ -44,5 +44,5 @@ class fal_vprocess_step(models.Model):
     field_string_back = fields.Char("Change field on back", default="")
     field_string_reset = fields.Char("Change field on reset", default="")
     
-    # def _valid_field_parameter(self, field, name):
-    #     return name == 'ondelete' or super()._valid_field_parameter(field, name)
+    def _valid_field_parameter(self, field, name):
+        return name == 'ondelete' or super()._valid_field_parameter(field, name)
