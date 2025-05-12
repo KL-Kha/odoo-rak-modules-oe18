@@ -38,12 +38,12 @@
             # "validation_process/static/src/xml/*.xml",
         ],
         "web.assets_backend": [
-            "validation_process/static/src/scss/Falinwa/falinwa.scss",
-            "validation_process/static/src/js/Falinwa/Falinwa.config.js",
-            "validation_process/static/src/js/Falinwa/Falinwa.helper.js",
-            "validation_process/static/src/js/Falinwa/Falinwa.queryEngine.js",
-            "validation_process/static/src/js/Falinwa/Falinwa.validationProcess.js",
-            "validation_process/static/src/js/Falinwa/Falinwa.js",
+            # "validation_process/static/src/scss/Falinwa/falinwa.scss",
+            # "validation_process/static/src/js/Falinwa/Falinwa.config.js",
+            # "validation_process/static/src/js/Falinwa/Falinwa.helper.js",
+            # "validation_process/static/src/js/Falinwa/Falinwa.queryEngine.js",
+            # "validation_process/static/src/js/Falinwa/Falinwa.validationProcess.js",
+            # "validation_process/static/src/js/Falinwa/Falinwa.js",
         ],
     },
 }
