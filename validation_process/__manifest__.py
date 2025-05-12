@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': "Validation process.",
-    'version': '17.0.0.1',
+    'version': '18.0.0.1',
     'license': 'OPL-1',
     'summary': "Enable Dynamic Validation Process.",
     'sequence': 20,
