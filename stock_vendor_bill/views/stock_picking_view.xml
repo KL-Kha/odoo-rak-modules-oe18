@@ -1,0 +1,22 @@
+<odoo>
+    <record id="stock_bill_layer_picking_rak" model="ir.ui.view">
+        <field name="name">stock.bill.layer.picking.rak</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button string="Bill" type="object"
+                    name="action_view_bills"
+                    class="oe_stat_button" icon="fa-dollar"
+                    invisible="bill_count == 0"
+                    />
+
+            </xpath>
+            <xpath expr="//group/field[@name='picking_type_id']" position="after">
+                <field name="bill_ids" invisible="1"/>
+                <field name="bill_count" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

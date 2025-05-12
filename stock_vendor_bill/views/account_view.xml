@@ -1,0 +1,60 @@
+<odoo>
+    <record id="view_purchase_adv_payment_inv_rak1" model="ir.ui.view">
+        <field name="name">view.purchase.adv.payment.inv.rak1</field>
+        <field name="model">purchase.advance.payment.inv</field>
+        <field name="inherit_id" ref="fal_purchase_downpayment.view_purchase_advance_payment_inv" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='count']" position="before">
+                <field name="is_picking" invisible="1"/>
+                <field name="picking_ids" invisible="not is_picking"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_form_rak_inherit1" model="ir.ui.view">
+        <field name="name">view.move.form.rak.inherit1</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="po_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Reconciled with Picking Valuation">
+                    <field name="picking_reconciled_line_ids">
+                        <list editable="bottom" string="Journal Items" default_order="sequence, date desc, move_name desc, id">
+                            <field name="purchase_line_id" invisible="1"/>
+                            <field name="product_uom_category_id" invisible="1"/>
+                            <field name="display_type" force_save="1" invisible="1"/>
+                            <field name="move_name" invisible="1"/>
+                            <field name="move_id" invisible="0"/>
+                            <field name="product_id" invisible="0"/>
+                            <field name="account_id" invisible="display_type in ['line_section', 'line_note']" required="display_type not in ['line_section', 'line_note']" domain="[('company_ids', 'in', parent.company_id)]"/>
+                            <field name="partner_id" domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]" />
+                            <field name="name" widget="section_and_note_text" optional="show"/>
+                            <field name="date_maturity" optional="hide" invisible="display_type in ('line_section', 'line_note')"/>
+                            <field name="amount_currency" groups="base.group_multi_currency" optional="hide"/>
+                            <field name="debit" sum="Total Debit" invisible="display_type in ('line_section', 'line_note')"/>
+                            <field name="credit" sum="Total Credit" invisible="display_type in ('line_section', 'line_note')"/>
+                            <field name="payment_id" invisible="1"/>
+                            <field name="quantity" invisible="0"/>
+                            <field name="product_uom_id" invisible="1"/>
+                            <field name="price_unit" invisible="1"/>
+                            <field name="discount" invisible="1"/>
+                            <field name="price_subtotal" invisible="1"/>
+                            <field name="price_total" invisible="1"/>
+                            <field name="sequence" invisible="1"/>
+                            <field name="date" invisible="1"/>
+                            <field name="tax_line_id" invisible="1"/>
+                            <field name="tax_group_id" invisible="1"/>
+                            <field name="tax_repartition_line_id" invisible="1" force_save="1"/>
+                            <field name="tax_base_amount" invisible="1" force_save="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="company_currency_id" invisible="1"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
