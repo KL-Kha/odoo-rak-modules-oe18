@@ -17,7 +17,6 @@
                         <group>
                             <field name="x_picking_type_id"/>
                             <field name="x_overcharge_ratio"/>
-                            
                         </group>
                         <group>
                             <field name="x_is_active"/>

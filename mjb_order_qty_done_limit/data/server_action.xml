@@ -7,8 +7,8 @@
         <field name="code">
 <![CDATA[
 for record in records:
-    if record.picking_type_id.x_picking_qty_done_limit:
-        if record.state == 'done' and record.picking_type_id.x_picking_qty_done_limit.x_is_active == True:
+    if record.picking_type_id.x_order_qty_done_limit:
+        if record.state == 'done' and record.picking_type_id.x_order_qty_done_limit.x_is_active == True:
             if record.purchase_line_id and record.sale_line_id:
                 pass
             if record.purchase_line_id and not record.sale_line_id:
@@ -18,7 +18,7 @@ for record in records:
                 for move in pol_stock_moves:
                     if move.product_uom_qty and move.quantity:
                         done_qty += move.quantity
-                qty_limit = order_qty * (1 + (record.picking_type_id.x_picking_qty_done_limit.x_overcharge_ratio)/100)
+                qty_limit = order_qty * (1 + (record.picking_type_id.x_order_qty_done_limit.x_overcharge_ratio)/100)
                 if done_qty > qty_limit:
                     raise(UserError('完成数量不允许超订单需求数量，审核失败! The actual received quantity exceeds the permissible limit.'))
             if record.sale_line_id and not record.purchase_line_id:
@@ -28,7 +28,7 @@ for record in records:
                 for move in sol_stock_moves:
                     if move.product_uom_qty and move.quantity:
                         done_qty += move.quantity
-                qty_limit = order_qty * (1 + (record.picking_type_id.x_picking_qty_done_limit.x_overcharge_ratio)/100)
+                qty_limit = order_qty * (1 + (record.picking_type_id.x_order_qty_done_limit.x_overcharge_ratio)/100)
                 if done_qty > qty_limit:
                     raise(UserError('完成数量不允许超订单需求数量，审核失败! The actual received quantity exceeds the permissible limit.')) 
 ]]>
