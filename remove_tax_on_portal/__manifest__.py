@@ -8,7 +8,7 @@
 Remove tax on portal
 ======================================.
     """,
-    'depends': ['base','website_sale','sale_management'],
+    'depends': ['base', 'sale','website_sale','sale_management'],
     'data': [
         'views/sale_view.xml',
     ],
