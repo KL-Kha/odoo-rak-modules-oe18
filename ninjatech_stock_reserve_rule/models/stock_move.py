@@ -65,7 +65,7 @@ class StockMove(models.Model):
         else:
             return float('inf')
 
-    def _action_assign(self):
+    def _action_assign(self, force_qty=False):
         # res = super()._action_assign()
         wh_location_ids = self.wh_locations()
         out_domain = self._move_out_domain(product_variant_ids=self.mapped('product_id.id'),
@@ -122,7 +122,7 @@ class StockMove(models.Model):
                             filtered_moves[index]._do_unreserve()
                             extra_moves |= filtered_moves[index]
                             index += 1
-        super(StockMove, extra_moves or self)._action_assign()
+        super(StockMove, extra_moves or self)._action_assign(force_qty=force_qty)
         # return res
 
         #
