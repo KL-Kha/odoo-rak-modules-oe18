@@ -722,9 +722,16 @@ class SaleOrderLine(models.Model):
             return self.get_assigned_bo_line()
         return
 
-    @api.onchange('product_uom_qty', 'product_uom')
-    def product_uom_change(self):
-        res = super().product_uom_change()
+    # @api.onchange('product_uom_qty', 'product_uom')
+    # def product_uom_change(self):
+    #     res = super().product_uom_change()
+    #     if self.product_id and not self.env.context.get('skip_blanket_find', False):
+    #         return self.get_assigned_bo_line()
+    #     return res
+
+    @api.depends('product_id', 'product_uom', 'product_uom_qty')
+    def _compute_price_unit(self):
+        res = super()._compute_price_unit()
         if self.product_id and not self.env.context.get('skip_blanket_find', False):
             return self.get_assigned_bo_line()
         return res
@@ -744,7 +751,7 @@ class SaleOrderLine(models.Model):
                 self.tax_id = blanket_order_line.tax_id
         else:
             self._compute_tax_id()
-            self.with_context(skip_blanket_find=True).product_uom_change()
+            self.with_context(skip_blanket_find=True)._compute_price_unit()
 
     @api.constrains('product_id')
     def check_product_id(self):
