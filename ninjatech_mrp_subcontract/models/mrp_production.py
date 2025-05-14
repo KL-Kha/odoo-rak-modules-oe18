@@ -5,9 +5,7 @@ from odoo.tools import float_round
 
 
 class MrpProduction(models.Model):
-
     _inherit = "mrp.production"
-
 
     def _post_inventory(self, cancel_backorder=False):
         moves_to_do, moves_not_to_do = set(), set()

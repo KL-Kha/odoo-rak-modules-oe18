@@ -69,6 +69,7 @@ class StockMove(models.Model):
                                    cost,
                                    acc_subcontract_valuation=False):
         self.ensure_one()
+        valuation_partner_id = self._get_partner_id_for_valuation_lines()
         second_credit_account = acc_subcontract_valuation
         move_ids = self._prepare_account_move_line(qty, cost, credit_account_id, debit_account_id, svl_id, description, second_credit_account=second_credit_account)
         svl = self.env['stock.valuation.layer'].browse(svl_id)
