@@ -49,7 +49,8 @@ class PurchaseOrderLine(models.Model):
         elif values.get('sale_line_id', False):
             sale_line_id = sale_line_obj.browse(values.get('sale_line_id', False))
             analytic = sale_line_id.fal_analytic_account_id.id or sale_line_id.order_id.analytic_account_id.id
-        res['account_analytic_id'] = analytic
+        if analytic:
+            res['analytic_distribution'] = {analytic: 100}
         return res
 
 
@@ -64,5 +65,6 @@ class StockRule(models.Model):
         analytic = False
         if sale_line:
             analytic = sale_line.fal_analytic_account_id.id or sale_line.order_id.analytic_account_id.id
-        res['account_analytic_id'] = analytic
+        if analytic:
+            res['analytic_distribution'] = {analytic: 100}
         return res
