@@ -37,8 +37,8 @@ class PurchaseOrderLine(models.Model):
 
     # Transfer analytic account to purchase "_run_buy"
     @api.model
-    def _prepare_purchase_order_line_from_procurement(self, product_id, product_qty, product_uom, company_id, values, po):
-        res = super(PurchaseOrderLine, self)._prepare_purchase_order_line_from_procurement(product_id, product_qty, product_uom, company_id, values, po)
+    def _prepare_purchase_order_line_from_procurement(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, po):
+        res = super(PurchaseOrderLine, self)._prepare_purchase_order_line_from_procurement(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, po)
         move = values.get('move_dest_ids', False)
         sale_line = move and move.sale_line_id
         sale_line_obj = self.env['sale.order.line']
