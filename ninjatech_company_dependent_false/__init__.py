@@ -80,6 +80,7 @@ def post_init_hook(env):
 
 def uninstall_hook(env):
     table = env['res.partner']._table
+    company_id = env.company.id
 
     # Step 1: Check current column type
     env.cr.execute(f"""
@@ -108,7 +109,7 @@ def uninstall_hook(env):
         ALTER COLUMN property_payment_term_id DROP DEFAULT,
         ALTER COLUMN property_payment_term_id TYPE jsonb
         USING CASE
-            WHEN company_id IS NOT NULL THEN jsonb_build_object(company_id::text, property_payment_term_id)
+            WHEN property_payment_term_id IS NOT NULL THEN jsonb_build_object('{company_id}', property_payment_term_id)
             ELSE NULL
         END,
         ALTER COLUMN property_payment_term_id SET DEFAULT NULL
@@ -119,7 +120,7 @@ def uninstall_hook(env):
         ALTER COLUMN property_supplier_payment_term_id DROP DEFAULT,
         ALTER COLUMN property_supplier_payment_term_id TYPE jsonb
         USING CASE
-            WHEN company_id IS NOT NULL THEN jsonb_build_object(company_id::text, property_supplier_payment_term_id)
+            WHEN property_supplier_payment_term_id IS NOT NULL THEN jsonb_build_object('{company_id}', property_supplier_payment_term_id)
             ELSE NULL
         END,
         ALTER COLUMN property_supplier_payment_term_id SET DEFAULT NULL
