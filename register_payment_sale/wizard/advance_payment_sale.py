@@ -86,7 +86,7 @@ class AdvancePaymentDorsan(models.TransientModel):
             'journal_id': self.journal_id.id,
             'receipt': self.receipt,
             'sale_order_ids': [(6, 0, [])],
-            'ref': self.memo,
+            'memo': self.memo,
         })
         for wizard in self.sale_order_ids:
             advance_account_payment_ids = wizard.sale_order_id.advance_account_payment_ids.ids
