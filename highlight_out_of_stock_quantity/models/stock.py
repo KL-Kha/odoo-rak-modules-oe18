@@ -8,7 +8,7 @@ class StockMove(models.Model):
     _order = 'red_line_display desc,difference_qty asc, id desc'
 
     # product_qty1 = fields.Float('Real Quantity')
-    plus_minus_symbol = fields.Char(compute='_compute_plus_minus_symbol', string='', readonly="1")
+    plus_minus_symbol = fields.Char(compute='_compute_plus_minus_symbol', string='', readonly=True)
 
     @api.depends('availability', 'product_uom_qty')
     def _compute_difference_qty(self):
@@ -45,7 +45,7 @@ class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
     _order = 'difference_qty asc, id desc'
 
-    plus_minus_symbol = fields.Char(compute='_compute_plus_minus_symbol', string='', readonly="1")
+    plus_minus_symbol = fields.Char(compute='_compute_plus_minus_symbol', string='', readonly=True)
     difference_qty = fields.Float('Difference', related='move_id.difference_qty', store=True)
 
     def _compute_plus_minus_symbol(self):
