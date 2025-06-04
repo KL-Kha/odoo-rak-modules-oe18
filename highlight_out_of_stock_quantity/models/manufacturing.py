@@ -8,10 +8,12 @@ class MrpProduction(models.Model):
     _inherit = "mrp.production"
 
     def get_trans_detail(self):
+        state_selection = dict(self.env['stock.picking'].fields_get(allfields=['state'])['state']['selection'])
         for rec in self:
             html = '<p>'
             for one_line in rec.picking_ids:
-                    html += '<b>' + one_line.name + '</b>: ' + str(dict(one_line.fields_get(allfields=['state'])['state']['selection'])[one_line.state]) + '<br/>'
+                state_label = state_selection.get(one_line.state, one_line.state)
+                html += '<b>' + one_line.name + '</b>: ' + state_label + '<br/>'
             html += '</p>'
             rec.transfer_status = html
 
