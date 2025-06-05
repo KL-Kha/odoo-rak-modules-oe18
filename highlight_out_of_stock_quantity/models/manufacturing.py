@@ -7,6 +7,7 @@ from odoo import fields, models, api, _
 class MrpProduction(models.Model):
     _inherit = "mrp.production"
 
+    @api.depends('picking_ids.name', 'picking_ids.state')
     def get_trans_detail(self):
         state_selection = dict(self.env['stock.picking'].fields_get(allfields=['state'])['state']['selection'])
         for rec in self:
