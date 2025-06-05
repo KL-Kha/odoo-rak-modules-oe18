@@ -17,6 +17,6 @@ class MrpProduction(models.Model):
             html += '</p>'
             rec.transfer_status = html
 
-    transfer_status = fields.Html(string='Transfer status', compute='get_trans_detail', store=True)
+    transfer_status = fields.Html(string='Transfer status', compute='get_trans_detail')
 
 
