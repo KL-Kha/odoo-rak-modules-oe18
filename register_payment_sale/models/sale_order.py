@@ -256,7 +256,7 @@ class SaleOrder(models.Model):
             total_register_payment = 0
             total_request_amount = 0
             for payment_order in sale_order_payment_ids:
-                if payment_order.payment_id.state in ['posted', 'reconciled']:
+                if payment_order.payment_id.state in ['paid']:
                     total_register_payment += payment_order.register_amount
                 if payment_order.payment_id.state in ['draft']:
                     total_request_amount += payment_order.request_amount
