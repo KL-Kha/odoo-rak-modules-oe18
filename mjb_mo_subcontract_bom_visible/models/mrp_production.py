@@ -7,7 +7,7 @@ class MRPProduction(models.Model):
 
     bom_id = fields.Many2one(
         'mrp.bom', 'Bill of Material',
-        readonly=True,
+        # readonly=True,
         domain="""[
         '&',
             '|',
