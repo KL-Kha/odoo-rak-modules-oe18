@@ -25,7 +25,7 @@ class StockMove(models.Model):
     fal_project_id = fields.Many2one('account.analytic.account', string='Analytic Account')
 
     def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description):
-        res = super(StockMove, self)._generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description)
+        res = super(StockMove, self)._generate_valuation_lines_data(partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description)
         res['debit_line_vals'].update({
             'analytic_account_id': self.fal_project_id.id
         })
