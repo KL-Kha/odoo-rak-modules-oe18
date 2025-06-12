@@ -174,7 +174,7 @@ class StockMove(models.Model):
             credit_line_vals = {
                 **line_vals,
                 'credit': material_cost if material_cost > 0 else 0,
-                'balance': -credit_value,
+                'balance': -material_cost,
                 'debit': -material_cost if material_cost < 0 else 0,
                 'account_id': credit_account_id,
             }
@@ -190,6 +190,7 @@ class StockMove(models.Model):
                 'product_uom_id': self.product_id.uom_id.id,
                 'ref': description,
                 'partner_id': partner_id,
+                'balance': -extra_cost,
                 'credit': extra_cost if extra_cost > 0 else 0,
                 'debit': -extra_cost if extra_cost < 0 else 0,
                 'account_id': second_credit_account.id,
