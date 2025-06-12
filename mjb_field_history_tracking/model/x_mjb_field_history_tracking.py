@@ -139,7 +139,10 @@ env['x_mjb_field_history_tracking']._check_update(records)
 				if field_type == 'binary':
 					binary_filename_field = f"{field.name}_filename"
 					old_value = old_values.get(binary_filename_field, '')
-					new_value = context_record_change.get(binary_filename_field, '')
+					if binary_filename_field in context_record_change._fields:
+						new_value = context_record_change[binary_filename_field] or ''
+					else:
+						new_value = ''
 
 				display_old_value = records.env.context.get('display_old_date', True)
 				change_entry = (
@@ -172,7 +175,11 @@ env['x_mjb_field_history_tracking']._check_update(records)
 
 				elif item.ttype == 'binary':
 					binary_filename_field = f"{item.name}_filename"
-					bullet_list += f"<li>{field_label}: {context_record_change[binary_filename_field] if context_record_change[binary_filename_field] else ''}</li>"
+					if binary_filename_field in context_record_change._fields:
+						binary_filename_field = context_record_change[binary_filename_field] or ''
+					else:
+						binary_filename_field = ''
+					bullet_list += f"<li>{field_label}: {binary_filename_field}</li>"
 
 				elif item.ttype in ['one2many', 'many2many']:
 					related_records = field_value
