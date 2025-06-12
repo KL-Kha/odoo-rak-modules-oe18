@@ -12,15 +12,25 @@ class StockMove(models.Model):
         """ Accounting Valuation Entries """
         self.ensure_one()
         am_vals = []
-        if self.product_id.type != 'consu':
+        if not self.product_id.is_storable:
             # no stock valuation for consumable products
             return am_vals
-        if self.restrict_partner_id and self.restrict_partner_id != self.company_id.partner_id:
+        if self._should_exclude_for_valuation():
             # if the move isn't owned by the company, we don't make any valuation
             return am_vals
 
-        company_from = self._is_out() and self.mapped('move_line_ids.location_id.company_id') or False
-        company_to = self._is_in() and self.mapped('move_line_ids.location_dest_id.company_id') or False
+        move_directions = self.env.context.get('move_directions') or False
+
+        self_is_out_move = self_is_in_move = False
+        if move_directions:
+            self_is_out_move = move_directions.get(self.id) and 'out' in move_directions.get(self.id)
+            self_is_in_move = move_directions.get(self.id) and 'in' in move_directions.get(self.id)
+        else:
+            self_is_out_move = self._is_out()
+            self_is_in_move = self._is_in()
+
+        company_from = self_is_out_move and self.mapped('move_line_ids.location_id.company_id') or False
+        company_to = self_is_in_move and self.mapped('move_line_ids.location_dest_id.company_id') or False
 
         production_id = self.env['mrp.production'].search([("name", '=', self.origin)])
         # is_subcontract = production_id and production_id.x_studio_sourcing.x_studio_order_type == "Subcontracting"
@@ -177,23 +187,18 @@ class StockMove(models.Model):
         if credit_value != debit_value:
             # for supplier returns of product in average costing method, in anglo saxon mode
             diff_amount = debit_value - credit_value
-            price_diff_account = self.product_id.property_account_creditor_price_difference
-
+            price_diff_account = self.env.context.get('price_diff_account')
             if not price_diff_account:
-                price_diff_account = self.product_id.categ_id.property_account_creditor_price_difference_categ
-            if not price_diff_account:
-                raise UserError(
-                    _('Configuration error. Please configure the price difference account on the product or its category to process this operation.'))
+                raise UserError(_('Configuration error. Please configure the price difference account on the product or its category to process this operation.'))
 
             rslt['price_diff_line_vals'] = {
                 'name': self.name,
                 'product_id': self.product_id.id,
                 'quantity': qty,
                 'product_uom_id': self.product_id.uom_id.id,
+                'balance': -diff_amount,
                 'ref': description,
                 'partner_id': partner_id,
-                'credit': diff_amount > 0 and diff_amount or 0,
-                'debit': diff_amount < 0 and -diff_amount or 0,
                 'account_id': price_diff_account.id,
             }
         return rslt
