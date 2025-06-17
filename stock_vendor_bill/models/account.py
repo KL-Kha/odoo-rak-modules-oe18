@@ -348,7 +348,7 @@ class PurchaseAdvancePaymentInv(models.TransientModel):
 
     def create_invoices(self):
         purchase_orders = self.env['purchase.order'].browse(self._context.get('active_ids', []))
-        if any(line.product_id.detailed_type == 'service' for line in purchase_orders.order_line) and not self.picking_ids:
+        if any(line.product_id.type == 'service' for line in purchase_orders.order_line) and not self.picking_ids:
             return super(PurchaseAdvancePaymentInv, self).create_invoices()
         if not self.is_picking:
             return super(PurchaseAdvancePaymentInv, self).create_invoices()
