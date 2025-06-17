@@ -415,9 +415,9 @@ class PurchaseAdvancePaymentInv(models.TransientModel):
                 else:
                     tax_ids = taxes.ids
                 context = {'lang': order.partner_id.lang}
-                analytic_tag_ids = []
-                for line in order.order_line:
-                    analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in line.analytic_tag_ids]
+                # analytic_tag_ids = []
+                # for line in order.order_line:
+                #     analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in line.analytic_tag_ids]
                 po_line = purchase_line_obj.create({
                     'name': _('Down Payment: %s') % (time.strftime('%m %Y'),),
                     'price_unit': amount,
@@ -427,7 +427,7 @@ class PurchaseAdvancePaymentInv(models.TransientModel):
                     'discount': 0.0,
                     'product_uom': self.product_id.uom_id.id,
                     'product_id': self.product_id.id,
-                    'analytic_tag_ids': analytic_tag_ids,
+                    # 'analytic_tag_ids': analytic_tag_ids,
                     'taxes_id': [(6, 0, tax_ids)],
                     'fal_is_downpayment': True,
                 })
