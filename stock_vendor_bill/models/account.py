@@ -429,7 +429,7 @@ class PurchaseAdvancePaymentInv(models.TransientModel):
                     'product_id': self.product_id.id,
                     # 'analytic_tag_ids': analytic_tag_ids,
                     'taxes_id': [(6, 0, tax_ids)],
-                    'fal_is_downpayment': True,
+                    'is_downpayment': True,
                 })
                 del context
                 invoice = self._create_invoice(order, po_line, amount)
