@@ -12,7 +12,6 @@ class StockPicking(models.Model):
     bill_ids = fields.Many2many('account.move', 'picking_account_move_rel', 'picking_id', 'move_id', string='Vendor Bills', copy=False)
     bill_count = fields.Integer(compute="_compute_bill", string='Bill Count', copy=False, default=0, store=True)
 
-
     def action_view_bills(self):
         self.ensure_one()
         action = self.env.ref('account.action_move_in_invoice_type')

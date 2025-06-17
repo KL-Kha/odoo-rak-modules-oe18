@@ -9,8 +9,7 @@
                 <button string="Bill" type="object"
                     name="action_view_bills"
                     class="oe_stat_button" icon="fa-dollar"
-                    invisible="bill_count == 0"
-                    />
+                    attrs="{'invisible': [('bill_count', '=', 0)]}"/>
 
             </xpath>
             <xpath expr="//group/field[@name='picking_type_id']" position="after">
