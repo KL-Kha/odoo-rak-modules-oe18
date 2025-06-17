@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Downpayment Purchase',
-    'version': '18.0.1.0.1',
+    'version': '18.0.1.0.2',
     'license': 'OPL-1',
     'summary': 'Purchase DownPayment',
     'category': 'Purchases',
@@ -18,7 +18,7 @@
     ],
     'data': [
         'security/ir.model.access.csv',
-        'views/res_config_views.xml',
+        # 'views/res_config_views.xml',
         'views/purchase.xml',
         'wizard/purchase_make_invoice_advance_views.xml',
     ],

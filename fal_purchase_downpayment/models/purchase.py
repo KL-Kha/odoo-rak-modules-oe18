@@ -10,27 +10,19 @@ _logger = logging.getLogger(__name__)
 
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
+    
+    amount_to_invoice = fields.Monetary(string="Un-invoiced Balance", compute='_compute_amount_to_invoice')
+    amount_invoiced = fields.Monetary(string="Already invoiced", compute='_compute_amount_invoiced')
+    
+    @api.depends('order_line.amount_to_invoice')
+    def _compute_amount_to_invoice(self):
+        for order in self:
+            order.amount_to_invoice = sum(order.order_line.mapped('amount_to_invoice'))
 
-    #################################################################################
-    # Override Odoo Button, to call Wizard Instead of just going to entries view
-    def action_view_purchase_downpayment(self):
-        view_id = self.env['ir.model.data']._xmlid_to_res_id(
-            'fal_purchase_downpayment.view_purchase_advance_payment_inv'
-        )
-        context = self.env.context.copy()
-        context.update({'company_id': self.company_id.id,'active_ids':[self.id],'active_id':self.id})
-        view = {
-            'name': _('Down Payment'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'purchase.advance.payment.inv',
-            'view_id': view_id,
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'readonly': True,
-            'context': context
-        }
-        return view
+    @api.depends('order_line.amount_invoiced')
+    def _compute_amount_invoiced(self):
+        for order in self:
+            order.amount_invoiced = sum(order.order_line.mapped('amount_invoiced'))
 
     #################################################################################
     # Do not copy if line is downpayment
@@ -49,7 +41,7 @@ class PurchaseOrder(models.Model):
         msg = _("""There is nothing to invoice!\n
 Reason(s) of this behavior could be:
 - You should deliver your products before invoicing them: Click on the "truck" icon (top-right of your screen) and follow instructions.
-- You should modify the invoicing policy of your product: Open the product, go to the "Sales tab" and modify invoicing policy from "delivered quantities" to "ordered quantities".
+- You should modify the invoicing policy of your product: Open the product, go to the "purchase tab" and modify invoicing policy from "delivered quantities" to "ordered quantities".
         """)
         return UserError(msg)
 
@@ -83,7 +75,7 @@ Reason(s) of this behavior could be:
     @api.model
     def _prepare_down_payment_section_line(self, **optional_values):
         """
-        Prepare the dict of values to create a new down payment section for a sales order line.
+        Prepare the dict of values to create a new down payment section for a purchase order line.
 
         :param optional_values: any parameter that should be added to the returned down payment section
         """
@@ -206,18 +198,18 @@ Reason(s) of this behavior could be:
                     line[2]['sequence'] = PurchaseOrderLine._get_invoice_line_sequence(new=sequence, old=line[2]['sequence'])
                     sequence += 1
 
-        # Manage the creation of invoices in sudo because a salesperson must be able to generate an invoice from a
-        # sale order without "billing" access rights. However, he should not be able to create an invoice from scratch.
+        # Manage the creation of invoices in sudo because a person must be able to generate an invoice from a
+        # purchase order without "billing" access rights. However, he should not be able to create an invoice from scratch.
         moves = self.env['account.move'].sudo().with_context(default_move_type='in_invoice').create(invoice_vals_list)
 
         # 4) Some moves might actually be refunds: convert them if the total amount is negative
         # We do this after the moves have been created since we need taxes, etc. to know if the total
         # is actually negative or not
         if final:
-            moves.sudo().filtered(lambda m: m.amount_total < 0).action_switch_invoice_into_refund_credit_note()
+            moves.sudo().filtered(lambda m: m.amount_total < 0).action_switch_move_type()
         for move in moves:
-            move.message_post_with_view('mail.message_origin_link',
-                values={'self': move, 'origin': move.line_ids.mapped('purchase_line_id.order_id')},
+            move.message_post_with_source('mail.message_origin_link',
+                render_values={'self': move, 'origin': move.line_ids.mapped('purchase_line_id.order_id')},
                 subtype_id=self.env.ref('mail.mt_note').id
             )
         return moves

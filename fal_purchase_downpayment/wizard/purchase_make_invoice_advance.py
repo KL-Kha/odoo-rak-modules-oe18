@@ -1,224 +1,358 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-
-from odoo import api, fields, models, _
-import odoo.addons.decimal_precision as dp
+from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
+from odoo.fields import Command
+from odoo.tools import format_date, frozendict
 
-import logging
 
-_logger = logging.getLogger(__name__)
+class purchaseAdvancePaymentInv(models.TransientModel):
+    _name = 'purchase.advance.payment.inv'
+    _description = "purchases Advance Payment Bill"
 
-TYPE2JOURNAL = {
-    'out_invoice': 'sale',
-    'in_invoice': 'purchase',
-    'out_refund': 'sale',
-    'in_refund': 'purchase',
-}
+    advance_payment_method = fields.Selection(
+        selection=[
+            ('delivered', "Regular bill"),
+            ('percentage', "Down payment (percentage)"),
+            ('fixed', "Down payment (fixed amount)"),
+        ],
+        string="Create Bill",
+        default='delivered',
+        required=True,
+        help="A standard bill is issued with all the order lines ready for invoicing,"
+            "according to their invoicing policy (based on ordered or delivered quantity).")
+    count = fields.Integer(string="Order Count", compute='_compute_count')
+    purchase_order_ids = fields.Many2many(
+        'purchase.order', default=lambda self: self.env.context.get('active_ids'))
 
-class PurchaseAdvancePaymentInv(models.TransientModel):
-    _name = "purchase.advance.payment.inv"
-    _description = "Purchase Advance Payment Invoice"
+    # Down Payment logic
+    has_down_payments = fields.Boolean(
+        string="Has down payments", compute="_compute_has_down_payments")
+    deduct_down_payments = fields.Boolean(string="Deduct down payments", default=True)
 
-    # Fix Warning
-    def _valid_field_parameter(self, field, name):
-        # allow tracking on models inheriting from 'mail.thread'
-        return name == 'digits' or super()._valid_field_parameter(field, name)
+    # New Down Payment
+    amount = fields.Float(
+        string="Down Payment",
+        help="The percentage of amount to be billed in advance.")
+    fixed_amount = fields.Monetary(
+        string="Down Payment Amount (Fixed)",
+        help="The fixed amount to be billed in advance.")
+    currency_id = fields.Many2one(
+        comodel_name='res.currency',
+        compute='_compute_currency_id',
+        store=True)
+    company_id = fields.Many2one(
+        comodel_name='res.company',
+        compute='_compute_company_id',
+        store=True)
+    amount_invoiced = fields.Monetary(
+        string="Already billed",
+        compute="_compute_bill_amounts",
+        help="Only confirmed down payments are considered.")
+    amount_to_invoice = fields.Monetary(
+        string="Amount to bill",
+        compute="_compute_bill_amounts",
+        help="The amount to bill = purchase Order Total - Confirmed Down Payments.")
 
-    @api.model
-    def _count(self):
-        return len(self._context.get('active_ids', []))
-
-    @api.model
-    def _default_product_id(self):
-        product_id = self.env['ir.config_parameter'].sudo().get_param('fal_purchase_downpayment.fal_deposit_product_id')
-        return self.env['product.product'].browse(int(product_id)).exists()
-
-    @api.model
-    def _default_deposit_account_id(self):
-        return self._default_product_id()._get_product_accounts()['expense']
-
-    @api.model
-    def _default_deposit_taxes_id(self):
-        return self._default_product_id().supplier_taxes_id
-
-    @api.model
-    def _default_has_down_payment(self):
-        if self._context.get('active_model') == 'purchase.order' and self._context.get('active_id', False):
-            purchase_order = self.env['purchase.order'].browse(self._context.get('active_id'))
-            return purchase_order.order_line.filtered(
-                lambda purchase_order_line: purchase_order_line.is_downpayment
-            )
-        return False
-
-    @api.model
-    def _default_currency_id(self):
-        if self._context.get('active_model') == 'purchase.order' and self._context.get('active_id', False):
-            purchase_order = self.env['purchase.order'].browse(self._context.get('active_id'))
-            return purchase_order.currency_id
-
-    @api.model
-    def _default_journal(self):
-        if self._context.get('default_journal_id', False):
-            return self.env['account.journal'].browse(self._context.get('default_journal_id'))
-        inv_type = self._context.get('move_type', 'in_invoice')
-        inv_types = inv_type if isinstance(inv_type, list) else [inv_type]
-        company_id = self._context.get('company_id', self.env.user.company_id.id)
-        domain = [
-            ('type', 'in', [TYPE2JOURNAL[ty] for ty in inv_types if ty in TYPE2JOURNAL]),
-            ('company_id', '=', company_id),
-        ]
-        company_currency_id = self.env['res.company'].browse(company_id).currency_id.id
-        currency_id = self._context.get('default_currency_id') or company_currency_id
-        currency_clause = [('currency_id', '=', currency_id)]
-        if currency_id == company_currency_id:
-            currency_clause = ['|', ('currency_id', '=', False)] + currency_clause
-        return self.env['account.journal'].search(domain + currency_clause, limit=1)
-
-    advance_payment_method = fields.Selection([
-        ('received', 'Regular Bills'),
-        ('percentage', 'Down payment (percentage)'),
-        ('fixed', 'Down payment (fixed amount)')],
-        string='What do you want to be invoiced?',
-        default='received',
-        required=True
+    # UI
+    display_draft_invoice_warning = fields.Boolean(compute="_compute_display_draft_invoice_warning")
+    display_invoice_amount_warning = fields.Boolean(compute="_compute_display_invoice_amount_warning")
+    consolidated_billing = fields.Boolean(
+        string="Consolidated Billing", default=True,
+        help="Create one bill for all orders related to same customer and same invoicing address"
     )
-    deduct_down_payments = fields.Boolean('Deduct down payments', default=True)
-    has_down_payments = fields.Boolean('Has down payments', default=_default_has_down_payment, readonly=True)
-    product_id = fields.Many2one('product.product', string='Down Payment Product', domain=[('type', '=', 'service')], default=_default_product_id)
-    count = fields.Integer(default=_count, string='Order Count')
-    amount = fields.Float('Down Payment Amount', digits='Account', help="The percentage of amount to be invoiced in advance, taxes excluded.")
-    currency_id = fields.Many2one('res.currency', string='Currency', default=_default_currency_id)
-    fixed_amount = fields.Monetary('Down Payment Amount(Fixed)', digits='Account', help="The fixed amount to be invoiced in advance, taxes excluded.")
-    deposit_account_id = fields.Many2one("account.account", string="Expense Account", domain=[('deprecated', '=', False)], help="Account used for deposits", default=_default_deposit_account_id)
-    deposit_taxes_id = fields.Many2many("account.tax", string="Vendor Taxes", help="Taxes used for deposits", default=_default_deposit_taxes_id)
-    journal_id = fields.Many2one('account.journal', string='Journal', required=True, default=_default_journal)
+
+    #=== COMPUTE METHODS ===#
+
+    @api.depends('purchase_order_ids')
+    def _compute_count(self):
+        for wizard in self:
+            wizard.count = len(wizard.purchase_order_ids)
+
+    @api.depends('purchase_order_ids')
+    def _compute_has_down_payments(self):
+        for wizard in self:
+            wizard.has_down_payments = bool(
+                wizard.purchase_order_ids.order_line.filtered('is_downpayment')
+            )
+
+    # next computed fields are only used for down payments invoices and therefore should only
+    # have a value when 1 unique SO is invoiced through the wizard
+    @api.depends('purchase_order_ids')
+    def _compute_currency_id(self):
+        self.currency_id = False
+        for wizard in self:
+            if wizard.count == 1:
+                wizard.currency_id = wizard.purchase_order_ids.currency_id
+
+    @api.depends('purchase_order_ids')
+    def _compute_company_id(self):
+        self.company_id = False
+        for wizard in self:
+            if wizard.count == 1:
+                wizard.company_id = wizard.purchase_order_ids.company_id
+
+    @api.depends('amount', 'fixed_amount', 'advance_payment_method', 'amount_to_invoice')
+    def _compute_display_invoice_amount_warning(self):
+        for wizard in self:
+            invoice_amount = wizard.fixed_amount
+            if wizard.advance_payment_method == 'percentage':
+                invoice_amount = wizard.amount / 100 * sum(wizard.purchase_order_ids.mapped('amount_total'))
+            wizard.display_invoice_amount_warning = invoice_amount > wizard.amount_to_invoice
+
+    @api.depends('purchase_order_ids')
+    def _compute_display_draft_invoice_warning(self):
+        for wizard in self:
+            wizard.display_draft_invoice_warning = wizard.purchase_order_ids.invoice_ids.filtered(lambda invoice: invoice.state == 'draft')
+
+    @api.depends('purchase_order_ids')
+    def _compute_bill_amounts(self):
+        for wizard in self:
+            wizard.amount_invoiced = sum(wizard.purchase_order_ids._origin.mapped('amount_invoiced'))
+            wizard.amount_to_invoice = sum(wizard.purchase_order_ids._origin.mapped('amount_to_invoice'))
+
+    #=== ONCHANGE METHODS ===#
 
     @api.onchange('advance_payment_method')
-    def onchange_advance_payment_method(self):
+    def _onchange_advance_payment_method(self):
         if self.advance_payment_method == 'percentage':
-            return {'value': {'amount': 0}}
-        return {}
+            amount = self.default_get(['amount']).get('amount')
+            return {'value': {'amount': amount}}
 
-    def _prepare_invoice_values(self, order, name, amount, po_line):
-        invoice_vals = {
-            'move_type': 'in_invoice',
-            'invoice_origin': order.name,
-            'user_id': order.user_id.id,
-            'narration': order.notes,
-            'partner_id': order.partner_id.id,
-            'fiscal_position_id': order.fiscal_position_id.id or order.partner_id.property_account_position_id.id,
-            'journal_id': self.journal_id.id,
-            'currency_id': order.currency_id.id,
-            'payment_reference': order.partner_ref,
-            'invoice_payment_term_id': order.payment_term_id.id,
-            'invoice_line_ids': [(0, 0, {
-                'name': name,
-                'price_unit': amount,
-                'quantity': 1.0,
-                'product_id': self.product_id.id,
-                'product_uom_id': po_line.product_uom.id,
-                'tax_ids': [(6, 0, po_line.taxes_id.ids)],
-                'purchase_line_id': po_line.id,
-                'analytic_tag_ids': [(6, 0, po_line.analytic_tag_ids.ids)],
-                'analytic_account_id': po_line.account_analytic_id.id or False,
-            })],
-        }
-        return invoice_vals
+    #=== CONSTRAINT METHODS ===#
 
-    def _get_advance_details(self, order):
-        context = {'lang': order.partner_id.lang}
-        if self.advance_payment_method == 'percentage':
-            if all(self.product_id.supplier_taxes_id.mapped('price_include')):
-                amount = order.amount_total * self.amount / 100
-            else:
-                amount = order.amount_untaxed * self.amount / 100
-            name = _("Down payment of %s%%") % (self.amount)
-        else:
-            amount = self.fixed_amount
-            name = _('Down Payment')
-        del context
+    def _check_amount_is_positive(self):
+        for wizard in self:
+            if wizard.advance_payment_method == 'percentage' and wizard.amount <= 0.00:
+                raise UserError(_('The value of the down payment amount must be positive.'))
+            elif wizard.advance_payment_method == 'fixed' and wizard.fixed_amount <= 0.00:
+                raise UserError(_('The value of the down payment amount must be positive.'))
 
-        return amount, name
-
-    def _create_invoice(self, order, po_line, amount):
-        if (self.advance_payment_method == 'percentage' and self.amount <= 0.00) or (self.advance_payment_method == 'fixed' and self.fixed_amount <= 0.00):
-            raise UserError(_('The value of the down payment amount must be positive.'))
-
-        amount, name = self._get_advance_details(order)
-
-        invoice_vals = self._prepare_invoice_values(order, name, amount, po_line)
-
-        if order.fiscal_position_id:
-            invoice_vals['fiscal_position_id'] = order.fiscal_position_id.id
-        invoice = self.env['account.move'].create(invoice_vals)
-        invoice.message_post_with_view('mail.message_origin_link',
-                    values={'self': invoice, 'origin': order},
-                    subtype_id=self.env.ref('mail.mt_note').id)
-        return invoice
-
-    def _prepare_po_line(self, order, analytic_tag_ids, tax_ids, amount):
-        context = {'lang': order.partner_id.lang}
-        po_values = {
-            'name': _('Down Payment: %s') % (time.strftime('%m %Y'),),
-            'price_unit': amount,
-            'date_planned': order.date_planned or order.date_order,
-            'product_qty': 0.0,
-            'order_id': order.id,
-            'product_uom': self.product_id.uom_id.id,
-            'product_id': self.product_id.id,
-            'analytic_tag_ids': analytic_tag_ids,
-            'taxes_id': [(6, 0, tax_ids)],
-            'is_downpayment': True,
-        }
-        del context
-        return po_values
+    #=== ACTION METHODS ===#
 
     def create_invoices(self):
-        purchase_orders = self.env['purchase.order'].browse(self._context.get('active_ids', []))
+        self._check_amount_is_positive()
+        invoices = self._create_invoices(self.purchase_order_ids)
+        return self.purchase_order_ids.action_view_invoice(invoices=invoices)
 
-        if self.advance_payment_method == 'received':
-            purchase_orders.with_context(journal_id=self.journal_id.id)._create_invoices(final=self.deduct_down_payments)
-        else:
-            # Create deposit product if necessary
-            if not self.product_id:
-                vals = self._prepare_deposit_product()
-                self.product_id = self.env['product.product'].create(vals)
-                self.env['ir.config_parameter'].sudo().set_param('fal_purchase_downpayment.fal_deposit_product_id', self.product_id.id)
-
-            purchase_line_obj = self.env['purchase.order.line']
-            for order in purchase_orders:
-                amount, name = self._get_advance_details(order)
-                if self.product_id.purchase_method != 'purchase':
-                    raise UserError(_('The product used to invoice a down payment should have an invoice policy set to "Ordered quantities". Please update your deposit product to be able to create a deposit invoice.'))
-                if self.product_id.type != 'service':
-                    raise UserError(_("The product used to invoice a down payment should be of type 'Service'. Please use another product or update this product."))
-                taxes = self.product_id.supplier_taxes_id.filtered(lambda r: not order.company_id or r.company_id == order.company_id)
-                if order.fiscal_position_id and taxes:
-                    tax_ids = order.fiscal_position_id.map_tax(taxes, self.product_id, order.partner_id).ids
-                else:
-                    tax_ids = taxes.ids
-                context = {'lang': order.partner_id.lang}
-                analytic_tag_ids = []
-                for line in order.order_line:
-                    analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in line.analytic_tag_ids]
-
-                so_line_values = self._prepare_po_line(order, analytic_tag_ids, tax_ids, amount)
-                po_line = purchase_line_obj.create(so_line_values)
-                del context
-                self._create_invoice(order, po_line, amount)
-        if self._context.get('open_invoices', False):
-            return purchase_orders.action_view_invoice()
-        return {'type': 'ir.actions.act_window_close'}
-
-    def _prepare_deposit_product(self):
+    def view_draft_invoices(self):
         return {
-            'name': 'Vendor Down payment',
-            'type': 'service',
-            'purchase_method': 'purchase',
-            'property_account_expense_id': self.deposit_account_id.id,
-            'supplier_taxes_id': [(6, 0, self.deposit_taxes_id.ids)],
-            'company_id': False,
+            'name': _('Draft Bills'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'list',
+            'views': [(False, 'list'), (False, 'form')],
+            'res_model': 'account.move',
+            'domain': [('line_ids.purchase_line_ids.order_id', 'in', self.purchase_order_ids.ids), ('state', '=', 'draft')],
         }
+
+    #=== BUSINESS METHODS ===#
+
+    def _create_invoices(self, purchase_orders):
+        self.ensure_one()
+        if self.advance_payment_method == 'delivered':
+            return purchase_orders._create_invoices(final=self.deduct_down_payments, grouped=not self.consolidated_billing)
+        else:
+            self.purchase_order_ids.ensure_one()
+            self = self.with_company(self.company_id)
+            order = self.purchase_order_ids
+
+            # Create down payment section if necessary
+            purchaseOrderline = self.env['purchase.order.line'].with_context(purchase_no_log_for_new_lines=True)
+            if not any(line.display_type and line.is_downpayment for line in order.order_line):
+                purchaseOrderline.create(
+                    self._prepare_down_payment_section_values(order)
+                )
+
+            values, accounts = self._prepare_down_payment_lines_values(order)
+            down_payment_lines = purchaseOrderline.create(values)
+
+            invoice = self.env['account.move'].sudo().create(
+                self._prepare_invoice_values(order, down_payment_lines)
+            )
+
+            # Ensure the invoice total is exactly the expected fixed amount.
+            if self.advance_payment_method == 'fixed':
+                delta_amount = (invoice.amount_total - self.fixed_amount) * (1 if invoice.is_inbound() else -1)
+                if not order.currency_id.is_zero(delta_amount):
+                    receivable_line = invoice.line_ids\
+                        .filtered(lambda aml: aml.account_id.account_type == 'liability_payable')[:1]
+                    product_lines = invoice.line_ids\
+                        .filtered(lambda aml: aml.display_type == 'product')
+                    tax_lines = invoice.line_ids\
+                        .filtered(lambda aml: aml.tax_line_id.amount_type not in (False, 'fixed'))
+
+                    if product_lines and tax_lines and receivable_line:
+                        line_commands = [Command.update(receivable_line.id, {
+                            'amount_currency': receivable_line.amount_currency + delta_amount,
+                        })]
+                        delta_sign = 1 if delta_amount > 0 else -1
+                        for lines, attr, sign in (
+                            (product_lines, 'price_total', -1),
+                            (tax_lines, 'amount_currency', 1),
+                        ):
+                            remaining = delta_amount
+                            lines_len = len(lines)
+                            for line in lines:
+                                if order.currency_id.compare_amounts(remaining, 0) != delta_sign:
+                                    break
+                                amt = delta_sign * max(
+                                    order.currency_id.rounding,
+                                    abs(order.currency_id.round(remaining / lines_len)),
+                                )
+                                remaining -= amt
+                                line_commands.append(Command.update(line.id, {attr: line[attr] + amt * sign}))
+                        invoice.line_ids = line_commands
+
+            # Unsudo the invoice after creation if not already sudoed
+            invoice = invoice.sudo(self.env.su)
+
+            poster = self.env.user._is_internal() and self.env.user.id or SUPERUSER_ID
+            invoice.with_user(poster).message_post_with_source(
+                'mail.message_origin_link',
+                render_values={'self': invoice, 'origin': order},
+                subtype_xmlid='mail.mt_note',
+            )
+
+            title = _("Down payment Bill")
+            order.with_user(poster).message_post(
+                body=_("%s has been created", invoice._get_html_link(title=title)),
+            )
+
+            return invoice
+
+    def _prepare_down_payment_section_values(self, order):
+        return {
+            "name": "Down payment",
+            'product_qty': 0.0,
+            'order_id': order.id,
+            'display_type': 'line_section',
+            'is_downpayment': True,
+            'sequence': order.order_line and order.order_line[-1].sequence + 1 or 10,
+        }
+
+    def _prepare_down_payment_lines_values(self, order):
+        """ Create one down payment line per tax or unique taxes combination and per account.
+            Apply the tax(es) to their respective lines.
+
+            :param order: Order for which the down payment lines are created.
+            :return:      An array of dicts with the down payment lines values.
+        """
+        self.ensure_one()
+        AccountTax = self.env['account.tax']
+
+        if self.advance_payment_method == 'percentage':
+            ratio = self.amount / 100
+        else:
+            ratio = self.fixed_amount / order.amount_total if order.amount_total else 1
+
+        order_lines = order.order_line.filtered(lambda l: not l.display_type and not l.is_downpayment)
+        down_payment_values = []
+        for line in order_lines:
+            base_line_values = line._prepare_base_line_for_taxes_computation()
+            product_account = line['product_id'].product_tmpl_id.get_product_accounts(fiscal_pos=order.fiscal_position_id)
+            account = product_account.get('downpayment') or product_account.get('income')
+            AccountTax._add_tax_details_in_base_line(base_line_values, order.company_id)
+            tax_details = base_line_values['tax_details']
+
+            taxes = line.taxes_id.flatten_taxes_hierarchy()
+            fixed_taxes = taxes.filtered(lambda tax: tax.amount_type == 'fixed')
+            down_payment_values.append([
+                taxes - fixed_taxes,
+                base_line_values['analytic_distribution'],
+                tax_details['raw_total_excluded_currency'],
+                account,
+            ])
+            for fixed_tax in fixed_taxes:
+                # Fixed taxes cannot be set as taxes on down payments as they always amounts to 100%
+                # of the tax amount. Therefore fixed taxes are removed and are replace by a new line
+                # with appropriate amount, and non fixed taxes if the fixed tax affected the base of
+                # any other non fixed tax.
+                if fixed_tax.price_include:
+                    continue
+
+                if fixed_tax.include_base_amount:
+                    pct_tax = taxes[list(taxes).index(fixed_tax) + 1:]\
+                        .filtered(lambda t: t.is_base_affected and t.amount_type != 'fixed')
+                else:
+                    pct_tax = self.env['account.tax']
+                down_payment_values.append([
+                    pct_tax,
+                    base_line_values['analytic_distribution'],
+                    base_line_values['quantity'] * fixed_tax.amount,
+                    account
+                ])
+
+        downpayment_line_map = {}
+        analytic_map = {}
+        base_downpayment_lines_values = self._prepare_base_downpayment_line_values(order)
+        for tax_id, analytic_distribution, price_subtotal, account in down_payment_values:
+            grouping_key = frozendict({
+                'taxes_id': tuple(sorted(tax_id.ids)),
+                'account_id': account,
+            })
+            downpayment_line_map.setdefault(grouping_key, {
+                **base_downpayment_lines_values,
+                'taxes_id': grouping_key['taxes_id'],
+                'product_qty': 0.0,
+                'price_unit': 0.0,
+            })
+            downpayment_line_map[grouping_key]['price_unit'] += price_subtotal
+            if analytic_distribution:
+                analytic_map.setdefault(grouping_key, [])
+                analytic_map[grouping_key].append((price_subtotal, analytic_distribution))
+
+        lines_values = []
+        accounts = []
+        for key, line_vals in downpayment_line_map.items():
+            # don't add line if price is 0 and prevent division by zero
+            if order.currency_id.is_zero(line_vals['price_unit']):
+                continue
+            # weight analytic account distribution
+            if analytic_map.get(key):
+                line_analytic_distribution = {}
+                for price_subtotal, account_distribution in analytic_map[key]:
+                    for account, distribution in account_distribution.items():
+                        line_analytic_distribution.setdefault(account, 0.0)
+                        line_analytic_distribution[account] += price_subtotal / line_vals['price_unit'] * distribution
+                line_vals['analytic_distribution'] = line_analytic_distribution
+            # round price unit
+            line_vals['price_unit'] = order.currency_id.round(line_vals['price_unit'] * ratio)
+
+            lines_values.append(line_vals)
+            accounts.append(key['account_id'])
+
+        return lines_values, accounts
+
+    def _prepare_base_downpayment_line_values(self, order):
+        self.ensure_one()
+        return {
+            'name': _('Down Payment'),
+            'product_qty': 0.0,
+            'order_id': order.id,
+            'discount': 0.0,
+            'is_downpayment': True,
+            'sequence': order.order_line and order.order_line[-1].sequence + 1 or 10,
+        }
+
+    def _prepare_invoice_values(self, order, po_lines):
+        self.ensure_one()
+        return {
+            **order._prepare_invoice(),
+            'invoice_line_ids': [
+                Command.create({
+                    **line._prepare_account_move_line(),
+                    'quantity': 1.0  # Set the default quantity to 1
+                })
+                for line in po_lines
+            ],
+        }
+
+    def _get_down_payment_description(self, order):
+        self.ensure_one()
+        context = {'lang': order.partner_id.lang}
+        if self.advance_payment_method == 'percentage':
+            name = _("Down payment of %s%%", self.amount)
+        else:
+            name = _('Down Payment')
+        del context
+        return name
