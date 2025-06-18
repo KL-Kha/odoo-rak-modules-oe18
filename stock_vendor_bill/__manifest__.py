@@ -12,7 +12,7 @@
         'stock_account', 'fal_purchase_downpayment', 'account'
     ],
     'data': [
-        'views/account_view.xml',
+        # 'views/account_view.xml',
         'views/stock_picking_view.xml',
     ],
     'installable': True,
