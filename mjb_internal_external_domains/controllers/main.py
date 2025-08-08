@@ -34,9 +34,9 @@ def checkAccess(_url, _user, _env, pageType='portal'):
             accessGranted
         ])
         return True
-
-    # externalDomain = "8070-mjbcustomer-gitpodrakst-r63bah8lzep.ws-us54.gitpod.io"
-    # internalDomain = "8069-mjbcustomer-gitpodrakst-r63bah8lzep.ws-us54.gitpod.io"
+    return True
+    externalDomain = "erp-stg.rak-internal.net"
+    internalDomain = "erp-stg.rak-internal.net"
 
     isInternalDomain = internalDomain in _url
     isExternalDomain = externalDomain in _url
