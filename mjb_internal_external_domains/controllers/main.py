@@ -130,18 +130,11 @@ class Website(Home):
 
                 if accessGranted:
                     try:
-                        # credential = {'login': request.params['login'], 'password': request.params['password'], 'type': 'password'}
-                        # uid = request.session.authenticate(
-                        #     request.db,
-                        #     credential
-                        # )
-
+                        credential = {'login': request.params['login'], 'password': request.params['password'], 'type': 'password'}
                         uid = request.session.authenticate(
                             request.db,
-                            request.params['login'],
-                            request.params['password']
+                            credential
                         )
-
                         request.params['login_success'] = True
                         return request.redirect(self._login_redirect(uid, redirect=redirect))
                     except:
