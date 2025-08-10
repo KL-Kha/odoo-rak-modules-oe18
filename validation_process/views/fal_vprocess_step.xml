@@ -2,7 +2,7 @@
 <odoo>
     <record model="ir.ui.view" id="fal_vprocess_step_form_view">
         <field name="active" eval="True"/>
-        <field name="field_parent" eval="False"/>
+<!--         <field name="field_parent" eval="False"/> -->
         <field name="groups_id" eval="[(6, 0, [])]"/>
         <field name="inherit_id" eval="False"/>
         <field name="key" eval="False"/>
