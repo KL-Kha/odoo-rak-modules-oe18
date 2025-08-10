@@ -34,9 +34,9 @@ def checkAccess(_url, _user, _env, pageType='portal'):
             accessGranted
         ])
         return True
-    return True
-    externalDomain = "erp-stg.rak-internal.net"
-    internalDomain = "erp-stg.rak-internal.net"
+    
+    # externalDomain = "erp-stg.rak-internal.net"
+    # internalDomain = "erp-stg.rak-internal.net"
 
     isInternalDomain = internalDomain in _url
     isExternalDomain = externalDomain in _url
