@@ -170,8 +170,8 @@ env['x_mjb_field_history_tracking']._check_update(records)
 				field_value = context_record_change[item.name]
 
 				if item.ttype == 'selection':
-					info = record.fields_get([field.name])
-					selection_options = dict(info[field.name].get('selection', []))
+					info = record.fields_get([item.name])
+					selection_options = dict(info[item.name].get('selection', []))
 					value = selection_options.get(context_record_change[item.name], context_record_change[item.name])
 					bullet_list += f"<li>{field_label}: {value if value else ''}</li>"
 
