@@ -132,7 +132,8 @@ env['x_mjb_field_history_tracking']._check_update(records)
 					new_value = getattr(new_value, 'display_name', getattr(new_value, 'name', new_value))
 
 				if field_type == 'selection':
-					selection_options = dict(record._fields[field.name].selection)
+					info = record.fields_get([field.name])
+					selection_options = dict(info[field.name].get('selection', []))
 					old_value = selection_options.get(old_value, old_value)
 					new_value = selection_options.get(new_value, new_value)
 
@@ -169,7 +170,8 @@ env['x_mjb_field_history_tracking']._check_update(records)
 				field_value = context_record_change[item.name]
 
 				if item.ttype == 'selection':
-					selection_options = dict(record._fields[item.name].selection)
+					info = record.fields_get([field.name])
+					selection_options = dict(info[field.name].get('selection', []))
 					value = selection_options.get(context_record_change[item.name], context_record_change[item.name])
 					bullet_list += f"<li>{field_label}: {value if value else ''}</li>"
 
