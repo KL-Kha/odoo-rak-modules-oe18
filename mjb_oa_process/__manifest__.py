@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': "Office Approval Process",
-    'version': '18.0.0.1',
+    'version': '18.0.0.2',
     'license': 'OPL-1',
     'summary': "Enable Dynamic Validation Process.",
     'sequence': 20,

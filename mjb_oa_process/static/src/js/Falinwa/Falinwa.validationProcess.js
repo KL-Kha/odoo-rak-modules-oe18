@@ -171,47 +171,48 @@ export class ValidationProcess {
 
     getAllUrlParam(url = window.location.href) {
         const self = this;
-    
         // Ensure _opt and env.services.action exist
         if (!self._opt?.env?.services?.action) {
             console.warn("Action service is unavailable");
             return {};
         }
-    
+
         const currentAction = self._opt.env.services.action;
         if (!currentAction) {
             console.warn("Current action is not available");
             return {};
         }
-    
-        const currentControllers = currentAction.currentController;
+
+        const currentControllers = currentAction?.currentController;
         if (!currentControllers) {
             // console.warn("Current controller is not available");
             return {};
         }
-    
+
+        if (!currentControllers?.props) {
+            // console.warn("Current controller is not available");
+            return {};
+        }
+
         if (!currentControllers?.action) {
             // console.warn("No action found in current controllers");
             return {};
         }
-    
-        if (!currentControllers?.action?.controllers?.form) {
-            // console.warn("No form controller found");
+
+        if (currentControllers?.props?.type !== "form") {
             return {};
         }
-    
-        const currentContext = currentControllers?.action?.context?.params;
-        if (!currentContext?.resId) {
-            // console.warn("resId is missing in context");
+
+        if (!currentControllers?.currentState?.resId) {
             return {};
         }
-    
+
         return {
-            id: currentContext.resId,
-            model: currentControllers.action.res_model || null,
+            id: currentControllers.currentState.resId,
+            model: currentControllers.props.resModel || null,
             view_type: "form"
         };
-    }    
+    }
 
     setCache(key, value) {
         const self = this
@@ -680,7 +681,6 @@ export class ValidationProcess {
                             $(this).click(function () {
                                 s.log('click');
                                 setTimeout(function () {
-
                                     s.onDocumentChanged(currentState.id, currentState.model, currentState.view_type).catch(err => {
                                         return s.handleError('ON_DOCUMENT_CHANGED_FAILED', err);
                                     }).finally(data => {
@@ -690,7 +690,6 @@ export class ValidationProcess {
                             })
                         }
                     });
-
                     s.onDocumentChanged(currentState.id, currentState.model, currentState.view_type).catch(err => {
                         return s.handleError('ON_DOCUMENT_CHANGED_FAILED', err);
                     }).finally(data => {
@@ -868,7 +867,7 @@ export class ValidationProcess {
     }
 
     removeControls() {
-        const s = this;
+                const s = this;
         s.logf(`removeControls`);
 
         if (s.ui) {
@@ -917,18 +916,18 @@ export class ValidationProcess {
         s.isRefreshing = true;
 
         // If the required conditions are not satisfied, destroy the UI = unlock it as it is not needed
-        var cannotStartCondition = !view_type ||
-            !model ||
-            !id ||
-            view_type !== 'form' ||
-            model === false ||
-            id == false;
-
-        s.toggleStatus(!cannotStartCondition, 'Needed');
-        if (cannotStartCondition) {
-            s.destroy('NO_NEED');
-            return false;
-        }
+//        var cannotStartCondition = !view_type ||
+//            !model ||
+//            !id ||
+//            view_type !== 'form' ||
+//            model === false ||
+//            id == false;
+//
+//        s.toggleStatus(!cannotStartCondition, 'Needed');
+//        if (cannotStartCondition) {
+//            s.destroy('NO_NEED');
+//            return false;
+//        }
 
         // set params
         s.id = parseInt(id);
@@ -958,13 +957,13 @@ export class ValidationProcess {
         s.lockUI();
 
         //in case this is a new item we set the id to -1
-        if (s.id < 0) {
+        //in odoo 18 , new item not have id
+        if (!s.id) {
             s.toggleStatus(false, 'AccessRights', 'have', 'no');
             s.toggleStatus(true, 'Loaded');
             s.enableObjectEditionButtons();
             return false;
         }
-
         // active executions
         s.log(`Get active execution...`);
         s.execution = await s.getActiveExecution(s.id, s.process.id);
@@ -2158,9 +2157,12 @@ export class ValidationProcess {
 
                 try {
                     for (var i = nextAuthorizedUsers.length; i--;) {
+                        const userId = parseInt(nextAuthorizedUsers[i]);
+                        const matchedRule = nextActiveRules.find(rule => rule.user_ids.includes(userId));
+                        const ruleName = matchedRule ? matchedRule.name : '';
                         await s.createActivity(
                             `Document pending approval.<br />${s.process.name}${" "}-${" "}${nextExecutionStep.name}`,
-                            `Document pending approval. ${s.process.name}${" "}-${" "}${nextExecutionStep.name}`,
+                            `Document pending approval -${" "}${ruleName}`,
                             parseInt(nextAuthorizedUsers[i]),
                             parseInt(s.process.model_id[0]),
                             parseInt(s.execution.target)

@@ -47,9 +47,11 @@ td.btn-dark {
     color: #dc3545;
 }
 .oe_button_box.no_process {
+    display: none;
     overflow-y: inherit;
 }
 
+.validationProcess_disabled_v2 select ,
 .validationProcess_disabled_v2 input , 
 .validationProcess_disabled_v2 .o_notebook_content,  
 .validationProcess_disabled_v2  .o-checkbox, 
