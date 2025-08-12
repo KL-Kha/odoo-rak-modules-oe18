@@ -177,7 +177,7 @@ class BlanketOrder(models.Model):
         Trigger the change of fiscal position when the shipping address is modified.
         """
         self.fiscal_position_id = self.env['account.fiscal.position'].with_context(
-            force_company=self.company_id.id).get_fiscal_position(
+            force_company=self.company_id.id)._get_fiscal_position(
             self.partner_id.id,
             self.partner_shipping_id.id)
         return {}
@@ -722,19 +722,18 @@ class SaleOrderLine(models.Model):
             return self.get_assigned_bo_line()
         return
 
-    # @api.onchange('product_uom_qty', 'product_uom')
-    # def product_uom_change(self):
-    #     res = super().product_uom_change()
+    @api.onchange('product_uom_qty', 'product_uom')
+    def product_uom_change(self):
+        if self.product_id and not self.env.context.get('skip_blanket_find', False):
+            return self.get_assigned_bo_line()
+        return
+
+    # @api.depends('product_id', 'product_uom', 'product_uom_qty')
+    # def _compute_price_unit(self):
+    #     res = super()._compute_price_unit()
     #     if self.product_id and not self.env.context.get('skip_blanket_find', False):
     #         return self.get_assigned_bo_line()
     #     return res
-
-    @api.depends('product_id', 'product_uom', 'product_uom_qty')
-    def _compute_price_unit(self):
-        res = super()._compute_price_unit()
-        if self.product_id and not self.env.context.get('skip_blanket_find', False):
-            return self.get_assigned_bo_line()
-        return res
 
     @api.onchange('blanket_order_line')
     def onchange_blanket_order_line(self):
