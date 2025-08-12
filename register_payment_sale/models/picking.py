@@ -70,7 +70,7 @@ class ProcurementGroup(models.Model):
         moves_to_assign = self.env['stock.move'].search([
             ('state', 'in', ['confirmed', 'partially_available']),
             ('product_uom_qty', '!=', 0.0)
-        ], limit=None, order='priority desc, date_expected asc')
+        ], limit=None, order='priority desc')
         finance_approval_moves = moves_to_assign.filtered(lambda rec: rec.picking_id.is_finance_approval_available)
         for moves_chunk in split_every(100, finance_approval_moves.ids):
             # for p in self.env['stock.move'].browse(moves_chunk):
