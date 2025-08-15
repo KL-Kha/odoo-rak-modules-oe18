@@ -59,20 +59,18 @@ class Manufacturer(models.Model):
         return action
 
     @api.model_create_multi
-    def create(self, vals):
-        res = super(Manufacturer, self).create(vals)
-        if not res.product_id:
-            # print('----if not product_id---\n\n\n', res.product_id)
-            search_product_id = self.env['product.product'].search([('product_tmpl_id', '=', res.product_tmpl_id.id)], limit=1)
-            res['product_id'] = search_product_id.id
-            res['barcode'] = search_product_id.barcode
-        elif not res.product_tmpl_id:
-            # print('-----------res.product_tmpl_id---', res.product_tmpl_id)
-            search_product_id = self.env['product.product'].search([('id', '=', res.product_id.id)], limit=1)
-            # print('---search_product_id----\n\n\n', search_product_id)
-            res['product_tmpl_id'] = search_product_id.product_tmpl_id.id
-            res['barcode'] = search_product_id.barcode
-        return res
+    def create(self, vals_list):
+        records = super(Manufacturer, self).create(vals_list)
+        for rec in records:
+            if not rec.product_id:
+                search_product_id = self.env['product.product'].search([('product_tmpl_id', '=', rec.product_tmpl_id.id)], limit=1)
+                rec.product_id = search_product_id.id
+                rec.barcode = search_product_id.barcode
+            elif not rec.product_tmpl_id:
+                search_product_id = self.env['product.product'].search([('id', '=', rec.product_id.id)], limit=1)
+                rec.product_tmpl_id = search_product_id.product_tmpl_id.id
+                rec.barcode = search_product_id.barcode
+        return records
 
 class TracingPOAndPA(models.Model):
     _name = 'tracing.popa'
