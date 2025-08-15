@@ -27,7 +27,7 @@ class StockMove(models.Model):
             create_date_diff = (default_field - current_date).days
         else:
             create_date_diff = float('inf')
-        logger.info("item......... origin={}, min_diff={}".format(item.origin, min(required_delivery_diff, schedule_diff, create_date_diff)))
+        # logger.info("item......... origin={}, min_diff={}".format(item.origin, min(required_delivery_diff, schedule_diff, create_date_diff)))
         if required_delivery_diff or required_delivery_diff == 0:
             return required_delivery_diff
         elif schedule_diff or schedule_diff == 0:
@@ -71,7 +71,7 @@ class StockMove(models.Model):
         out_domain = self._move_out_domain(product_variant_ids=self.mapped('product_id.id'),
                                            wh_location_ids=wh_location_ids)
         out_moves = self.search(out_domain)
-        logger.info(f"out_moves: {out_moves}, out_domain: {out_domain}")
+        # logger.info(f"out_moves: {out_moves}, out_domain: {out_domain}")
         extra_moves = self
         total_qty = 0
         for move in self:
@@ -82,12 +82,12 @@ class StockMove(models.Model):
                 production_move = out_moves.filtered(
                     lambda m: m.raw_material_production_id or m.production_id)
                 other_move = out_moves
-                logger.info(f"production: {production_move}")
+                # logger.info(f"production: {production_move}")
 
                 if production_move and move in production_move:
                     production_move = production_move.sorted(
                         self.mo_sorting_order, reverse=True)
-                    logger.info(f"production: {production_move}")
+                    # logger.info(f"production: {production_move}")
                     move_index = list(production_move).index(move)
                     if move_index + 2 <= len(production_move):
                         production_move = production_move[move_index + 1:].filtered(
@@ -104,7 +104,7 @@ class StockMove(models.Model):
 
                 elif other_move and move in other_move:
                     filtered_moves = other_move.sorted(self.sale_sorting_order)
-                    logger.info(f"filtered_moves (origin): {filtered_moves.mapped('origin')}")
+                    # logger.info(f"filtered_moves (origin): {filtered_moves.mapped('origin')}")
                     move_index = list(filtered_moves).index(move)
                     # if move_index + 2 <= len(filtered_moves):
                     filtered_moves = filtered_moves.filtered(
@@ -162,5 +162,5 @@ class StockMove(models.Model):
             [('id', 'child_of', warehouse.view_location_id.id), ('usage', '=', 'view')],
             ['id'],
         )]
-        logger.info(f"warehouse locations: {wh_location_ids}")
+        # logger.info(f"warehouse locations: {wh_location_ids}")
         return wh_location_ids
