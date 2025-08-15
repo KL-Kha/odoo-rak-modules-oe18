@@ -135,9 +135,10 @@ class ResPartner(models.Model):
         :param: vals_list: list of dict
         :return: res.partner()
         """
-        partner = super(ResPartner, self).create(vals_list)
-        partner._onchange_country_id()
-        return partner
+        partners = super(ResPartner, self).create(vals_list)
+        for partner in partners:
+            partner._onchange_country_id()
+        return partners
 
     def remove_special_chars_from_partner_vals(self, partner_values):
         """
